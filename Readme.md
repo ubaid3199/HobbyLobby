@@ -1,59 +1,46 @@
-# MySQL, PHPMyAdmin and Node.js (ready for Express development)
+# HobbyLobby
 
-This will install Mysql and phpmyadmin (including all dependencies to run Phpmyadmin) AND node.js
+## Group Name: Syntax Terror
 
-This receipe is for development - Node.js is run in using supervisor: changes to any file in the app will trigger a rebuild automatically.
+### Members:
+- Ubaid Ur Rehman
+- Ehtesham Mumtaz
+- Alessia
+- Ahmed
+- Mohamed
 
-For security, this receipe uses a .env file for credentials.  A sample is provided in the env-sample file. If using these files for a fresh project, copy the env-sample file to a file called .env.  Do NOT commit the changed .env file into your new project for security reasons (in the node package its included in .gitignore so you can't anyway)
+---
 
-In node.js, we use the MySQl2 packages (to avoid problems with MySQL8) and the dotenv package to read the environment variables.
+## Project Description:
 
-Local files are mounted into the container using the 'volumes' directive in the docker-compose.yml for ease of development.
+Hobby Lobby is a support system-based web application designed to help users exchange their hobbies. Users benefit by sharing knowledge about their passions while also gaining the opportunity to learn a new hobby from others. The platform promotes mental well-being, social interaction, and personal skill development.
 
-### Super-quickstart your new project:
+Hobby Lobby connects individuals who share a similar hobby or wish to learn a new one. For example, one user may have expensive music equipment but lacks friends to play with, while another may want to learn music but cannot afford lessons. Hobby Lobby brings them together, allowing them to practice and exchange skills in a safe and structured environment.
 
-* Make sure that you don't have any other containers running usind docker ps
-* run ```docker-compose up --build```
+The application will ensure that users are matched effectively, interactions are safe, and hobby exchanges are meaningful.
 
-#### Visit phphmyadmin at:
+---
 
-http://localhost:8081/
+## Features:
 
-#### Visit your express app at:
+- **Hobby Exchange System** – Users can match with others based on interests and availability.
+- **In-app Messaging** – Secure communication between matched users.
+- **Verified User System** – Trust-based interactions through verified accounts.
+- **Hobby Points & Ratings** – Users earn points and ratings based on participation and feedback.
+- **Community Forums** – Users can share tips, projects, and experiences.
+- **Flexible Scheduling** – Hobby matches are based on user availability.
 
-http://localhost:3000
+---
 
-For reference, see the video at: https://roehampton.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=6f290a6b-ba94-4729-9632-adcf00ac336e
+## Setup & Installation:
 
-NB if you are running this on your own computer rather than the azure labs that has been set up for you, you will need to install the following:
+### **Prerequisites**
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/en/download/)
+- [Docker](https://www.docker.com/get-started)
 
-* node.js  (windows: https://nodejs.org/en/download/)
-* docker desktop (for windows, this will also prompt you to install linux subsystem for windows https://docs.docker.com/desktop/windows/install/ )
-
-### Whats provided in these scaffolding files?
-
-
-  * A docker setup which will provide you with node.js, mysql and phpmyadmin, including the configuration needed so that both node.js AND phpmyadmin can 'see' and connect to your mysql database.  If you don't use docker you'll have to set up and connect each of these components separately.
-  * A basic starting file structure for a node.js app.
-  * A package.json file that will pull in the node.js libraries required and start your app as needed.
-  * A db.js file which provides all the code needed to connect to the mysql database, using the credentials in the .env file, and which provides a query() function that can send queries to the database and receive a result.  In order to use this (ie. interact with the database, you simply need to include this file in any file you create that needs this database interaction) with the following code:
-
-```const db = require('./services/db');
-```
-
-____
-
-Useful commands:
-
-Get a shell in any of the containers
-
-```bash
-docker exec -it <container name> bash -l
-```
-
-Once in the database container, you can get a MySQL CLI in the usual way
-
-```bash
-mysql -uroot -p<password> 
-```
+### **Clone the Repository**
+```sh
+git clone https://github.com/ubaid3199/HobbyLobby.git
+cd HobbyLobby
 
