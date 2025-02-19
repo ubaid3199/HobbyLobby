@@ -1,0 +1,29 @@
+@startuml
+actor User
+participant "HobbyLobby System" as System
+database "Database" as DB
+participant "Messaging System" as Messaging
+
+User -> System : Searches for hobby matches
+System -> DB : Retrieves matching users
+DB -> System : Returns matched users
+System -> User : Showes matching users
+
+User -> User : Sends connection requests
+User -> System : Requests to connect
+System -> DB : Stores the connection request
+DB -> System : Confirms the request saved
+
+User -> System : Accept/reject requests
+System -> DB : Updates the request status
+DB -> System : Returns the status update
+
+System -> Messaging : Starts the chat session
+Messaging -> User : Notifies users about new chats
+
+User -> System : Leaves a review & earns you points
+System -> DB : Stores the reviews and updates Hobby Points
+DB -> System : Confirms the update
+System -> User : Shows the updated Hobby Points
+
+@enduml

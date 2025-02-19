@@ -1,0 +1,36 @@
+@startuml
+class User {
+    + String name
+    + String email
+    + String location
+    + List<Hobby> hobbies
+    + sendMessage()
+    + addHobby()
+}
+
+class Hobby {
+    + String hobbyName
+    + String description
+    + User owner
+}
+
+class Message {
+    + User sender
+    + User receiver
+    + String content
+    + sendMessage()
+}
+
+class HobbyLobbySystem {
+    + List<User> users
+    + List<Hobby> hobbies
+    + matchUsers()
+    + storeReview()
+}
+
+User --> Hobby : owns >
+User --> Message : sends >
+HobbyLobbySystem --> User : manages >
+HobbyLobbySystem --> Hobby : organizes >
+
+@enduml
