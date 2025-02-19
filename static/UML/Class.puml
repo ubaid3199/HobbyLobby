@@ -1,5 +1,6 @@
 @startuml
 class User {
+    + int userID      
     + String name
     + String email
     + String location
@@ -9,14 +10,15 @@ class User {
 }
 
 class Hobby {
+    + int hobbyID     
     + String hobbyName
     + String description
-    + User owner
-}
+    + int ownerID     
 
 class Message {
-    + User sender
-    + User receiver
+    + int messageID   
+    + int senderID    
+    + int receiverID  
     + String content
     + sendMessage()
 }
