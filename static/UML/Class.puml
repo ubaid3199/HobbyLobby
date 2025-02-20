@@ -13,7 +13,8 @@ class Hobby {
     + int hobbyID     
     + String hobbyName
     + String description
-    + int ownerID     
+    + int ownerID    
+}
 
 class Message {
     + int messageID   
