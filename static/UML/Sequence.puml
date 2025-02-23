@@ -4,7 +4,7 @@ participant "HobbyLobby System" as System
 database "Database" as DB
 participant "Messaging System" as Messaging
 
-User -> System : Searches for hobby matches 
+User -> System : Searches for hobby matches
 System -> DB : Retrieves matching users
 DB -> System : Returns matched users
 System -> User : Showes matching users
