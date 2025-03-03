@@ -1,0 +1,14 @@
+extends layout
+block content
+    - console.log(users)
+    .main-content 
+    h1 All HobbyLobby Users
+    table(border=1)
+        tr  
+            th ID
+            th Name
+        for user in users
+            tr  
+                td #{user.userID}
+                td 
+                    a(href='/user/' + user.userID) #{user.name}

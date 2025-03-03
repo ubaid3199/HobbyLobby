@@ -1,0 +1,16 @@
+extends layout
+block content
+    - console.log(listings)
+    .main-content 
+    h1 All HobbyLobby Listings
+    table(border=1)
+        tr  
+            th ID
+            th Hobby Name
+            th Category
+        for listing in listings
+            tr  
+                td #{listing.hobbyID}
+                td 
+                    a(href='/listing/' + listing.hobbyID) #{listing.hobbyName}
+                td #{listing.category}

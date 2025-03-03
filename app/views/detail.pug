@@ -1,0 +1,17 @@
+extends layout
+block content
+    h1 #{hobby.hobbyName}
+    p Category: #{hobby.category}
+    p Owner: #{hobby.owner}
+
+    p Description: #{hobby.description}
+
+    h2 Tags
+    if tags.length
+        ul
+            each tag in tags
+                li #{tag.name}
+    else
+        p No tags added yet.
+
+    a(href="/listings") ← Back to Listings
