@@ -23,15 +23,37 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
-app.get("/users", function(req, res) {
-  var sql = "SELECT * FROM Users";
-  db.query(sql).then(results => {
-      res.render("users", { users: results });
-  }).catch(error => {
-      console.error("Error fetching users:", error);
-      res.status(500).send("Internal Server Error");
-  });
+app.get("/users", async function (req, res) {
+  try {
+    const selectedTag = req.query.tag || "";
+
+    // Fetch all available tags
+    const tagsQuery = "SELECT DISTINCT name FROM Tags";
+    const tags = await db.query(tagsQuery);
+
+    let usersQuery = `
+      SELECT Users.userID, Users.name, COALESCE(Tags.name, 'No tag') AS tag
+      FROM Users
+      LEFT JOIN Hobby_Tags ON Users.userID = Hobby_Tags.hobbyID
+      LEFT JOIN Tags ON Hobby_Tags.tagID = Tags.tagID
+    `;
+
+    // If a tag is selected, filter users by it
+    let queryParams = [];
+    if (selectedTag) {
+      usersQuery += " WHERE Tags.name = ?";
+      queryParams.push(selectedTag);
+    }
+
+    const users = await db.query(usersQuery, queryParams);
+
+    res.render("users", { users, tags, selectedTag });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 
 
 // User Profile Page Route
@@ -84,24 +106,35 @@ app.get("/user/:id", async (req, res) => {
 });
 
 // Fetch all hobbies with their categories, owners, and tags
-app.get("/listings", async (req, res) => {
-  try {
-    const listingsQuery = `
+app.get("/listings", async function (req, res) {
+  const selectedCategory = req.query.category || "";
+
+  let listingsQuery = `
       SELECT Hobbies.hobbyID, Hobbies.hobbyName, Categories.name AS category, Users.name AS owner,
              GROUP_CONCAT(Tags.name SEPARATOR ', ') AS tags
       FROM Hobbies
       JOIN Categories ON Hobbies.categoryID = Categories.categoryID
       JOIN Users ON Hobbies.ownerID = Users.userID
       LEFT JOIN Hobby_Tags ON Hobbies.hobbyID = Hobby_Tags.hobbyID
-      LEFT JOIN Tags ON Hobby_Tags.tagID = Tags.tagID
-      GROUP BY Hobbies.hobbyID`;
-    const listings = await db.query(listingsQuery);
-    res.render("listings", { listings });
-  } catch (error) {
-    console.error("Error fetching listings:", error);
-    res.status(500).send("Internal Server Error");
+      LEFT JOIN Tags ON Hobby_Tags.tagID = Tags.tagID`;
+
+  let listingsParams = [];
+
+  if (selectedCategory) {
+      listingsQuery += " WHERE Categories.name = ?";
+      listingsParams.push(selectedCategory);
   }
+
+  listingsQuery += " GROUP BY Hobbies.hobbyID";
+
+  const categoriesQuery = "SELECT DISTINCT name FROM Categories";
+  const categories = await db.query(categoriesQuery);
+
+  const listings = await db.query(listingsQuery, listingsParams);
+
+  res.render("listings", { listings, categories, selectedCategory });
 });
+
 
 // Fetch hobby details and associated tags
 app.get("/listing/:id", async (req, res) => {
