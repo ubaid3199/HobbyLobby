@@ -344,3 +344,59 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- Additional Users
+INSERT INTO `Users` (`userID`, `name`, `email`, `location`, `created_at`) VALUES
+(14, 'Emma Watson', 'emma@hobbylobby.com', 'West London', '2025-02-27 10:00:00'),
+(15, 'Tom Hanks', 'tom@hobbylobby.com', 'North London', '2025-02-27 10:05:00'),
+(16, 'Angelina Jolie', 'angelina@hobbylobby.com', 'East London', '2025-02-27 10:10:00'),
+(17, 'Brad Pitt', 'brad@hobbylobby.com', 'South London', '2025-02-27 10:15:00'),
+(18, 'Scarlett Johansson', 'scarlett@hobbylobby.com', 'Central London', '2025-02-27 10:20:00'),
+(19, 'Chris Hemsworth', 'chris@hobbylobby.com', 'West London', '2025-02-27 10:25:00'),
+(20, 'Jennifer Lawrence', 'jennifer@hobbylobby.com', 'North London', '2025-02-27 10:30:00');
+
+-- Additional Categories
+INSERT INTO `Categories` (`categoryID`, `name`) VALUES
+(10, 'Photography'),
+(11, 'Dancing'),
+(12, 'Gardening'),
+(13, 'Fitness'),
+(14, 'Writing');
+
+-- Additional Hobbies
+INSERT INTO `Hobbies` (`hobbyID`, `hobbyName`, `description`, `ownerID`, `categoryID`) VALUES
+(14, 'Digital Photography', 'Learn the basics of digital photography and editing.', 14, 10),
+(15, 'Salsa Dancing', 'Join our salsa dancing classes for all levels.', 15, 11),
+(16, 'Urban Gardening', 'Tips and tricks for gardening in small spaces.', 16, 12),
+(17, 'Yoga Classes', 'Relaxing yoga sessions for beginners and intermediates.', 17, 13),
+(18, 'Creative Writing', 'Workshops to improve your creative writing skills.', 18, 14),
+(19, 'Street Photography', 'Capturing the essence of urban life through photography.', 19, 10),
+(20, 'Zumba Fitness', 'High-energy Zumba classes to keep you fit.', 20, 13);
+
+-- Additional Hobby_Tags
+INSERT INTO `Hobby_Tags` (`hobbyID`, `tagID`) VALUES
+(14, 1),
+(15, 2),
+(16, 1),
+(17, 2),
+(18, 3),
+(19, 2),
+(20, 4);
+
+-- Additional Messages
+INSERT INTO `Messages` (`messageID`, `senderID`, `receiverID`, `content`) VALUES
+(7, 14, 15, 'Hi Tom, I would love to join your salsa dancing classes!'),
+(8, 16, 17, 'Hey Brad, can you tell me more about your yoga classes?'),
+(9, 18, 19, 'Hi Chris, I am interested in your street photography sessions.'),
+(10, 20, 14, 'Emma, can you recommend a good camera for beginners?'),
+(11, 15, 16, 'Angelina, I would like to learn more about urban gardening.');
+
+-- Additional Reviews
+INSERT INTO `Reviews` (`reviewID`, `userID`, `rating`, `comments`) VALUES
+(9, 14, 5, 'Digital photography class was very informative.'),
+(10, 15, 4, 'Salsa dancing was fun and well-organized.'),
+(11, 16, 5, 'Urban gardening tips were very practical.'),
+(12, 17, 4, 'Yoga classes were relaxing and well-taught.'),
+(13, 18, 5, 'Creative writing workshop was inspiring.'),
+(14, 19, 4, 'Street photography session was very engaging.'),
+(15, 20, 5, 'Zumba fitness class was energetic and fun.');
