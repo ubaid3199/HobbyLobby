@@ -4,23 +4,47 @@ const express = require("express");
 // Create express app
 var app = express();
 
+// Use the Pug templating engine
+app.set('view engine', 'pug');
+app.set('views', './app/views');
+
 // Add static files location
 app.use(express.static("static"));
 
 // Get the functions in the db.js file to use
 const db = require('./services/db');
 
-// Create a route for root - /
+// Create a route for root
 app.get("/", function(req, res) {
-    res.send("Hello world!");
+    res.render("home");
 });
+
+app.get("/1", function(req, res) {
+    res.render("1", { user: {}, userTag: "", hobbies: [], messages: [] });
+});
+
+app.get("/detail", function(req, res) {
+    res.render("detail", { hobby: {}, tags: [] });
+});
+
+
+
+app.get("/user", function(req, res) {
+    res.render("user", { user: {}, userTag: "", hobbies: [], messages: [] });
+});
+
+app.get("/users", function(req, res) {
+    res.render("users", { tags: [], users: [] });
+});
+
+
 
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database
-    sql = 'select * from test_table';
+    sql = 'select * from hobbies';
     db.query(sql).then(results => {
-        console.log(results);
+        //console.log(results);
         res.send(results)
     });
 });
@@ -37,12 +61,43 @@ app.get("/goodbye", function(req, res) {
 app.get("/hello/:name", function(req, res) {
     // req.params contains any parameters in the request
     // We can examine it in the console for debugging purposes
-    console.log(req.params);
+    //console.log(req.params);
     //  Retrieve the 'name' parameter and use it in a dynamically generated page
     res.send("Hello " + req.params.name);
 });
 
+app.get("/listings", async function (req, res) {
+    const selectedCategory = req.query.category || "";
+  
+    let listingsQuery = `
+        SELECT Hobbies.hobbyID, Hobbies.hobbyName, Categories.name AS category, Users.name AS owner,
+               GROUP_CONCAT(Tags.name SEPARATOR ', ') AS tags
+        FROM Hobbies
+        JOIN Categories ON Hobbies.categoryID = Categories.categoryID
+        JOIN Users ON Hobbies.ownerID = Users.userID
+        LEFT JOIN Hobby_Tags ON Hobbies.hobbyID = Hobby_Tags.hobbyID
+        LEFT JOIN Tags ON Hobby_Tags.tagID = Tags.tagID`;
+  
+    let listingsParams = [];
+  
+    if (selectedCategory) {
+        listingsQuery += " WHERE Categories.name = ?";
+        listingsParams.push(selectedCategory);
+    }
+  
+    listingsQuery += " GROUP BY Hobbies.hobbyID";
+  
+    const categoriesQuery = "SELECT DISTINCT name FROM Categories";
+    const categories = await db.query(categoriesQuery);
+  
+    const listings = await db.query(listingsQuery);
+    console.log("hello");
+    res.render("listings", { listings, categories, selectedCategory });
+  });
+  
 // Start server on port 3000
 app.listen(3000,function(){
-    console.log(`Server running at http://127.0.0.1:3000/`);
+    //console.log(`Server running at http://127.0.0.1:3000/`);
 });
+
+
