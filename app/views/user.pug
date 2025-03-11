@@ -1,0 +1,24 @@
+extends layout
+block content
+    h1= user.name + "'s Profile"
+    p Email: #{user.email}
+    p Location: #{user.location}
+    p Tag: #{userTag} 
+
+    h2 Hobbies
+    if hobbies.length
+        ul
+            each hobby in hobbies
+                li #{hobby.hobbyName} (#{hobby.category})
+    else
+        p No hobbies added yet.
+
+    h2 Messages
+    if messages.length
+        ul
+            each message in messages
+                li #{message.senderName} to #{message.receiverName}: "#{message.content}"
+    else
+        p No messages yet.
+
+    a(href="/users") ← Back to User
