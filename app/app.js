@@ -42,12 +42,15 @@ app.get("/users", function(req, res) {
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database
-    sql = 'select * from hobbies';
+    sql = 'select * from test_table';
     db.query(sql).then(results => {
-        //console.log(results);
+        console.log(results);
         res.send(results)
     });
 });
+
+
+
 
 // Create a route for /goodbye
 // Responds to a 'GET' request
