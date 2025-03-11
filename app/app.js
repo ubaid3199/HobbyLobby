@@ -35,7 +35,7 @@ app.get("/users", async function (req, res) {
     const selectedTag = req.query.tag || "";
 
     // Fetch all available tags
-    const tagsQuery = "SELECT DISTINCT name FROM Tags";
+    const tagsQuery = "SELECT * FROM Tags ORDER BY tagID";
     const tags = await db.query(tagsQuery);
 
     let usersQuery = `
