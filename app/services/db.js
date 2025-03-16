@@ -13,7 +13,7 @@ const config = {
     connectionLimit: 2,
     queueLimit: 0,
   },
-};yt76yýyyy
+};
   
 const pool = mysql.createPool(config.db);
 
