@@ -27,9 +27,6 @@ app.get("/detail", function(req, res) {
     res.render("detail", { hobby: {}, tags: [] });
 });
 
-
-
-
 app.get("/users", async function (req, res) {
   try {
     const selectedTag = req.query.tag || "";
@@ -60,8 +57,6 @@ app.get("/users", async function (req, res) {
     res.status(500).send("Internal Server Error");
   }
 });
-
-
 
 // User Profile Page Route
 app.get("/user/:id", async (req, res) => {
