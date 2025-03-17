@@ -1,25 +1,25 @@
 extends layout
 block content
 
+    .container
+        .main-content 
+            h1 All HobbyLobby Listings
 
-    .main-content 
-        h1 All HobbyLobby Listings
-
-        table(border=1)
-            tr  
-                th ID
-                th Hobby Name
-                th 
-                    form(action="/listings" method="GET")
-                        select(name="category" onchange="this.form.submit()")
-                            option(value="") All Categories
-                            each category in categories
-                                option(value=category.name selected=(category.name === selectedCategory ? "selected" : undefined))= category.name
-            for listing in listings
+            table.listing-table
                 tr  
-                    td #{listing.hobbyID}
-                    td 
-                        a(href='/listing/' + listing.hobbyID) #{listing.hobbyName}
-                    td #{listing.category}
+                    th ID
+                    th Hobby Name
+                    th 
+                        form(action="/listings" method="GET")
+                            select(name="category" onchange="this.form.submit()")
+                                option(value="") All Categories
+                                each category in categories
+                                    option(value=category.name selected=(category.name === selectedCategory ? "selected" : undefined))= category.name
+                for listing in listings
+                    tr  
+                        td #{listing.hobbyID}
+                        td 
+                            a(href='/listing/' + listing.hobbyID) #{listing.hobbyName}
+                        td #{listing.category}
 
-    a(href="/") ← Back to Home Page
+            a.button(href="/") ← Back to Home Page
