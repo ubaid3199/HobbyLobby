@@ -1,22 +1,27 @@
 extends layout
 block content
-    h1 #{hobby.hobbyName}
-    p Category: #{hobby.category}
-    p Owner: #{hobby.owner}
 
-    p Description: #{hobby.description}
+    .container
+        .main-content 
+            h1 #{hobby.hobbyName}
 
-    h2 Tags
-    if tags.length
-        ul
-            each tag in tags
-                li #{tag.name}
-    else
-        p No tags added yet.
+            table.listing-table
+                tr  
+                    th Category
+                    th Owner
+                tr  
+                    td #{hobby.category}
+                    td #{hobby.owner}
+
+            p Description: #{hobby.description}
+
+            h2 Tags
+            if tags.length
+                ul
+                    each tag in tags
+                        li #{tag.name}
+            else
+                p No tags added yet.
 
     <a class="button" href="/listings">Back to Listings Page</a>
-    
     <a class="button" href="/">Back to Home Page</a>
-
-        
-
