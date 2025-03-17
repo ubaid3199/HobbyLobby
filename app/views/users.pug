@@ -1,25 +1,25 @@
 extends layout
 block content
 
-    .main-content 
-        h1 All Users
+    .container
+        .main-content 
+            h1 All Users
 
-        table(border=1)
-            tr  
-                th ID
-                th Name
-                th 
-                    form(action="/users" method="GET")
-                        select(name="tag" onchange="this.form.submit()")
-                            option(value="") All Tags
-                            each tag in tags
-                                option(value=tag.name selected=(tag.name === selectedTag ? "selected" : undefined))= tag.name
-            for user in users
+            table.listing-table
                 tr  
-                    td #{user.userID}
-                    td 
-                        a(href='/user/' + user.userID) #{user.name}
-                    td #{user.tag}
+                    th ID
+                    th Name
+                    th 
+                        form(action="/users" method="GET")
+                            select(name="tag" onchange="this.form.submit()")
+                                option(value="") All Tags
+                                each tag in tags
+                                    option(value=tag.name selected=(tag.name === selectedTag ? "selected" : undefined))= tag.name
+                for user in users
+                    tr  
+                        td #{user.userID}
+                        td 
+                            a(href='/user/' + user.userID) #{user.name}
+                        td #{user.tag}
 
     <a class="button" href="/">Back to Home Page</a>
-                
