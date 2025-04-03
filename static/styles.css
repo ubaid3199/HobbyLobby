@@ -116,3 +116,42 @@ body {
 .dark-mode .button:hover {
     background: linear-gradient(135deg, #003580, #00255c);
 }
+
+/* Sign Up Form Styling */
+.signup-form {
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.signup-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.signup-form input[type="text"],
+.signup-form input[type="email"],
+.signup-form input[type="password"],
+.signup-form input[type="date"],
+.signup-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.signup-form input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.signup-form button {
+    margin-top: 20px;
+}

@@ -1,0 +1,50 @@
+extends layout.pug
+
+block content
+  h1 Sign Up
+  form(action='/signup', method='post', class='signup-form')
+    label(for='firstName') First Name:
+    input(type='text', id='firstName', name='firstName', required=true)
+    br
+    label(for='lastName') Last Name:
+    input(type='text', id='lastName', name='lastName', required=true)
+    br
+    label(for='email') Email:
+    input(type='email', id='email', name='email', required=true)
+    br
+    label(for='password') Password:
+    input(type='password', id='password', name='password', required=true)
+    br
+    label(for='dob') Date of Birth:
+    input(type='date', id='dob', name='dob', required=true)
+    br
+    label(for='gender') Gender:
+    select(id='gender', name='gender', required=true)
+      option(value='') Select Gender
+      option(value='male') Male
+      option(value='female') Female
+      option(value='other') Other
+    br
+    label(for='locationBased') Location Based:
+    select(id='locationBased', name='locationBased', required=true)
+      option(value='') Select Location
+      option(value='northLondon') North London
+      option(value='eastLondon') East London
+      option(value='centralLondon') Central London
+      option(value='westLondon') West London
+      option(value='southLondon') South London
+    br
+    label(for='travelLocation') Willing to Travel To:
+    br
+    input(type='checkbox', id='northLondon', name='travelLocation', value='northLondon', required=true)
+    label(for='northLondon') North London
+    input(type='checkbox', id='eastLondon', name='travelLocation', value='eastLondon')
+    label(for='eastLondon') East London
+    input(type='checkbox', id='centralLondon', name='travelLocation', value='centralLondon')
+    label(for='centralLondon') Central London
+    input(type='checkbox', id='westLondon', name='travelLocation', value='westLondon')
+    label(for='westLondon') West London
+    input(type='checkbox', id='southLondon', name='travelLocation', value='southLondon')
+    label(for='southLondon') South London
+    br
+    button(type='submit') Sign Up

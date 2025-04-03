@@ -11,6 +11,9 @@ app.set('views', './app/views');
 // Add static files location
 app.use(express.static("static"));
 
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded({ extended: false }));
+
 // Get the functions in the db.js file to use
 const db = require('./services/db');
 
@@ -19,8 +22,38 @@ app.get("/", function(req, res) {
     res.render("home");
 });
 
+app.get("/signup", function(req, res) {
+    res.render("signup");
+});
+
+app.get("/signin", function(req, res) {
+    res.render("signin");
+});
+
 app.get("/1", function(req, res) {
     res.render("1", { user: {}, userTag: "", hobbies: [], messages: [] });
+});
+
+app.post("/signup", function(req, res) {
+  console.log("Sign up form data:", req.body);
+  const { firstName, lastName, email, password, dob, gender, locationBased, travelLocation } = req.body;
+
+  let travelLocations = [];
+  if (req.body.travelLocation) {
+    if (Array.isArray(req.body.travelLocation)) {
+      travelLocations = req.body.travelLocation;
+    } else {
+      travelLocations = [req.body.travelLocation];
+    }
+  }
+  // TODO: Implement user creation logic
+  res.send("Sign up successful!");
+});
+
+app.post("/signin", function(req, res) {
+  console.log("Sign in form data:", req.body);
+  // TODO: Implement authentication logic
+  res.send("Sign in successful!");
 });
 
 app.get("/detail", function(req, res) {
