@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 04, 2025 at 06:57 PM
+-- Generation Time: Apr 04, 2025 at 11:34 PM
 -- Server version: 9.2.0
 -- PHP Version: 8.2.27
 
@@ -158,7 +158,8 @@ INSERT INTO `Messages` (`messageID`, `senderID`, `receiverID`, `content`) VALUES
 (8, 16, 17, 'Hey Brad, can you tell me more about your yoga classes?'),
 (9, 18, 19, 'Hi Chris, I am interested in your street photography sessions.'),
 (10, 20, 14, 'Emma, can you recommend a good camera for beginners?'),
-(11, 15, 16, 'Angelina, I would like to learn more about urban gardening.');
+(11, 15, 16, 'Angelina, I would like to learn more about urban gardening.'),
+(12, 28, 5, 'Hi waas curious about getting in touch to learn more about the hobby you teach');
 
 -- --------------------------------------------------------
 
@@ -308,6 +309,12 @@ ALTER TABLE `Hobbies`
   ADD PRIMARY KEY (`hobbyID`);
 
 --
+-- Indexes for table `Messages`
+--
+ALTER TABLE `Messages`
+  ADD PRIMARY KEY (`messageID`);
+
+--
 -- Indexes for table `Users`
 --
 ALTER TABLE `Users`
@@ -329,6 +336,12 @@ ALTER TABLE `User_Hobbies`
 --
 ALTER TABLE `Hobbies`
   MODIFY `hobbyID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `Messages`
+--
+ALTER TABLE `Messages`
+  MODIFY `messageID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `Users`

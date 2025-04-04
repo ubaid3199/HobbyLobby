@@ -293,14 +293,20 @@ app.post("/message/:receiverID", async (req, res) => {
     return res.redirect("/signin");
   }
 
-  const insertQuery = `
-    INSERT INTO Messages (senderID, receiverID, content)
-    VALUES (?, ?, ?)`;
+  try {
+    const insertQuery = `
+      INSERT INTO Messages (senderID, receiverID, content)
+      VALUES (?, ?, ?)`;
 
-  await db.query(insertQuery, [senderID, receiverID, content]);
+    await db.query(insertQuery, [senderID, receiverID, content]);
 
-  res.redirect(`/user/${receiverID}`);
+    res.redirect(`/user/${receiverID}`);
+  } catch (err) {
+    console.error("Error sending message:", err);
+    res.status(500).send("Failed to send message.");
+  }
 });
+
 
 app.get("/detail", function(req, res) {
     res.render("detail", { hobby: {}, tags: [] });
@@ -315,20 +321,24 @@ app.get("/users", async function (req, res) {
     const tags = await db.query(tagsQuery);
 
     let usersQuery = `
-      SELECT Users.userID, Users.name, COALESCE(Tags.name, 'No tag') AS tag
-      FROM Users
-      LEFT JOIN User_Hobbies ON Users.userID = User_Hobbies.userID
-      LEFT JOIN Hobby_Tags ON User_Hobbies.hobbyID = Hobby_Tags.hobbyID
-        LEFT JOIN Tags ON Hobby_Tags.tagID = Tags.tagID
+      SELECT U.userID, U.name,
+        GROUP_CONCAT(DISTINCT H.hobbyName SEPARATOR ', ') AS hobbies,
+        COALESCE(T.name, 'No tag') AS tag
+      FROM Users U
+      LEFT JOIN User_Hobbies UH ON U.userID = UH.userID
+      LEFT JOIN Hobbies H ON UH.hobbyID = H.hobbyID
+      LEFT JOIN Hobby_Tags HT ON H.hobbyID = HT.hobbyID
+      LEFT JOIN Tags T ON HT.tagID = T.tagID
     `;
 
+    const queryParams = [];
 
-    // If a tag is selected, filter users by it
-    let queryParams = [];
     if (selectedTag) {
-      usersQuery += " WHERE Tags.name = ?";
+      usersQuery += " WHERE T.name = ?";
       queryParams.push(selectedTag);
     }
+
+    usersQuery += " GROUP BY U.userID, U.name, T.name ORDER BY U.userID";
 
     const users = await db.query(usersQuery, queryParams);
 
@@ -395,9 +405,6 @@ app.get("/user/:id", async (req, res) => {
   }
 });
 
-
-    
-
 app.get("/listings", async function (req, res) {
   const selectedCategory = req.query.category || "";
 
@@ -427,6 +434,41 @@ app.get("/listings", async function (req, res) {
   res.render("listings", { listings, categories, selectedCategory });
 });
 
+app.get("/listing/:id", async (req, res) => {
+  try {
+    const hobbyId = req.params.id;
+
+    // Fetch Hobby Details
+    const hobbyQuery = `
+      SELECT H.hobbyName, H.description, C.name AS category, U.name AS owner
+      FROM Hobbies H
+      JOIN Categories C ON H.categoryID = C.categoryID
+      JOIN User_Hobbies UH ON H.hobbyID = UH.hobbyID
+      JOIN Users U ON UH.userID = U.userID
+      WHERE H.hobbyID = ?`;
+    const hobbyResult = await db.query(hobbyQuery, [hobbyId]);
+
+    if (hobbyResult.length === 0) {
+      return res.status(404).send("Hobby not found");
+    }
+
+    // Fetch Tags
+    const tagsQuery = `
+      SELECT T.name 
+      FROM Hobby_Tags HT
+      JOIN Tags T ON HT.tagID = T.tagID
+      WHERE HT.hobbyID = ?`;
+    const tags = await db.query(tagsQuery, [hobbyId]);
+
+    res.render("detail", {
+      hobby: hobbyResult[0],
+      tags
+    });
+  } catch (error) {
+    console.error("Error fetching hobby details:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.get("/test-bcrypt", async (req, res) => {
   const testPassword = "test123";
