@@ -47,7 +47,7 @@ app.get("/profile", async function(req, res) {
       console.log("User ID not found in session");
       return res.status(401).send("Unauthorized");
     }
-    const query = "SELECT * FROM Users WHERE userID = ?";
+    const query = "SELECT userID, name, email, dob, gender, location, travel_locations FROM Users WHERE userID = ?";
     const values = [userId];
     try {
       const results = await db.query(query, values);
