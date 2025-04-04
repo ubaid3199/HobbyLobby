@@ -1,35 +1,39 @@
 extends layout
+
 block content
+  .container
+    .main-content 
+      h1= user.name + "'s Profile"
 
-    .container
-        .main-content 
-            h1= user.name + "'s Profile"
+      // Show the message button only if you're not viewing your own profile
+      if user.userID !== userSessionID
+        a.button(href=`/message/${user.userID}`) Message this user
 
-            table.listing-table
-                tr  
-                    th Email
-                    th Location
-                    th Tag
-                tr  
-                    td #{user.email}
-                    td #{user.location}
-                    td #{userTag}
+      table.listing-table
+        tr  
+          th Email
+          th Location
+          th Tag
+        tr  
+          td #{user.email}
+          td #{user.location}
+          td #{userTag}
 
-            h2 Hobbies
-            if hobbies.length
-                ul
-                    each hobby in hobbies
-                        li #{hobby.hobbyName} (#{hobby.category})
-            else
-                p No hobbies added yet.
+      h2 Hobbies
+      if hobbies.length
+        ul
+          each hobby in hobbies
+            li #{hobby.hobbyName} (#{hobby.category})
+      else
+        p No hobbies added yet.
 
-            h2 Messages
-            if messages.length
-                ul
-                    each message in messages
-                        li #{message.senderName} to #{message.receiverName}: "#{message.content}"
-            else
-                p No messages yet.
+      h2 Messages
+      if messages.length
+        ul
+          each message in messages
+            li #{message.senderName} to #{message.receiverName}: "#{message.content}"
+      else
+        p No messages yet.
 
-    <a class="button" href="/users">Back to Users Page</a>
-    <a class="button" href="/">Back to Home Page</a>
+  a.button(href="/users") Back to Users Page
+  a.button(href="/") Back to Home Page

@@ -196,7 +196,6 @@ CREATE TABLE `Users` (
   `gender` VARCHAR(50) DEFAULT NULL,
   `location` varchar(100) DEFAULT NULL,
   `travel_locations` VARCHAR(255) DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
   `dob` DATE DEFAULT NULL,
   `gender` VARCHAR(50) DEFAULT NULL,
   `location` varchar(100) DEFAULT NULL,

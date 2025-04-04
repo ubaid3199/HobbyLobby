@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  .container
+    h1 Send Message to #{receiverName}
+
+    form(action=`/message/${receiverID}`, method="post")
+      div.form-group
+        label(for="content") Message:
+        textarea(name="content", id="content", required).form-control
+
+      button(type="submit" class="button") Send
+      br
+      a(href=`/user/${receiverID}`) ← Back to Profile

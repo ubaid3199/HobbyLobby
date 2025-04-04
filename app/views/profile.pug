@@ -2,9 +2,40 @@ extends layout.pug
 
 block content
   h1 User Profile
+
+  h2 Personal Information
   p Name: #{user.name}
   p Email: #{user.email}
   p Date of Birth: #{user.dob}
   p Gender: #{user.gender}
   p Location: #{user.location}
   p Travel Locations: #{user.travel_locations}
+
+  a(href='/edit-profile', class='button') Edit Profile
+
+  h2 My Hobbies
+  if hobbies.length
+    ul
+      each hobby in hobbies
+        li #{hobby.hobbyName} (#{hobby.category})
+  else
+    p You have no hobbies listed.
+
+  h2 Skill Level
+  p #{userTag}
+
+  h2 Messages
+  if messages.length
+    ul
+      each message in messages
+        li #{message.senderName} ➡ #{message.receiverName}: #{message.content}
+  else
+    p No messages to display.
+
+  h2 Reviews
+  if reviews.length
+    ul
+      each review in reviews
+        li Rating: #{review.rating} - #{review.comments}
+  else
+    p No reviews yet.

@@ -1,0 +1,8 @@
+extends layout.pug
+
+block content
+  h1 Send Message to #{receiverName}
+  form(action=`/message/${receiverID}`, method='POST')
+    textarea(name='content', required=true, placeholder='Type your message here...', class='form-control')
+    br
+    button(type='submit', class='btn btn-primary') Send Message

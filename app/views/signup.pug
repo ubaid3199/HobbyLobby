@@ -30,24 +30,52 @@ block content
       label(for='locationBased') Location Based:
       select(id='locationBased', name='locationBased', required=true, class='form-control')
         option(value='') Select Location
-        option(value='northLondon') North London
-        option(value='eastLondon') East London
-        option(value='centralLondon') Central London
-        option(value='westLondon') West London
-        option(value='southLondon') South London
+        option(value='North London') North London
+        option(value='East London') East London
+        option(value='Central London') Central London
+        option(value='West London') West London
+        option(value='South London') South London
     div.form-group
       label(for='travelLocation') Willing to Travel To:
       br
-      input(type='checkbox', id='northLondon', name='travelLocation', value='northLondon', required=true)
-      label(for='northLondon') North London
-      input(type='checkbox', id='eastLondon', name='travelLocation', value='eastLondon')
-      label(for='eastLondon') East London
-      input(type='checkbox', id='centralLondon', name='travelLocation', value='centralLondon')
-      label(for='centralLondon') Central London
-      input(type='checkbox', id='westLondon', name='travelLocation', value='westLondon')
-      label(for='westLondon') West London
-      input(type='checkbox', id='southLondon', name='travelLocation', value='southLondon')
-      label(for='southLondon') South London
+      label(for='North London') North London
+      input(type='checkbox', id='North London', name='travelLocation', value='North London', required=true)
+      br
+      label(for='East London') East London
+      input(type='checkbox', id='East London', name='travelLocation', value='East London')
+      br
+      label(for='Central London') Central London
+      input(type='checkbox', id='Central London', name='travelLocation', value='Central London')
+      br
+      label(for='West London') West London
+      input(type='checkbox', id='West London', name='travelLocation', value='West London')
+      br
+      label(for='South London') South London
+      input(type='checkbox', id='South London', name='travelLocation', value='South London')
+
+    div.form-group
+      label(for='hobbyName') Hobby Name:
+      input(type='text', id='hobbyName', name='hobbyName', required=true, class='form-control')
+
+    div.form-group
+      label(for='description') Hobby Description:
+      textarea(id='description', name='description', required=true, class='form-control')
+
+    div.form-group
+      label(for='categoryID') Hobby Category:
+      select(id='categoryID', name='categoryID', required=true, class='form-control')
+        option(value='') Select Category
+        each category in categories
+          option(value=category.categoryID)= category.name
+
+    div.form-group
+      label(for='tagID') Skill Level:
+      select(id='tagID', name='tagID', required=true, class='form-control')
+        option(value='') Select Skill Level
+        each tag in tags
+          option(value=tag.tagID)= tag.name
+
+
     button(type='submit', class='button') Sign Up
   div(style='text-align: center;')
     p

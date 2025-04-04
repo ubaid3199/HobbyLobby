@@ -1,0 +1,36 @@
+extends layout.pug
+
+block content
+  h1 Edit Profile
+
+      div.form-group
+
+  form(action="/edit-profile" method="post")
+    div.form-group
+        label(for="name") Name:
+        input(type="text", name="name", id="name", value=user.name required)
+    
+    div.form-group
+        label(for="email") Email:
+        input(type="email", name="email", id="email", value=user.email required)
+
+    div.form-group
+        label(for="dob") Date of Birth:
+        input(type="date", name="dob", id="dob", value=user.dob)
+
+    div.form-group
+        label(for="gender") Gender:
+        select(name="gender" id="gender")
+            option(value="male" selected=(user.gender == 'male')) Male
+            option(value="female" selected=(user.gender == 'female')) Female
+            option(value="other" selected=(user.gender == 'other')) Other
+
+    div.form-group
+        label(for="location") Location:
+        input(type="text", name="location", id="location", value=user.location)
+
+    div.form-group
+        label(for="travel_locations") Travel Locations:
+        input(type="text", name="travel_locations", id="travel_locations", value=user.travel_locations)
+
+    button(type="submit") Update Profile
