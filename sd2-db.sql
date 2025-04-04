@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Feb 26, 2025 at 09:26 PM
+-- Generation Time: Apr 04, 2025 at 06:57 PM
 -- Server version: 9.2.0
 -- PHP Version: 8.2.27
 
@@ -45,7 +45,12 @@ INSERT INTO `Categories` (`categoryID`, `name`) VALUES
 (8, 'Social Media'),
 (6, 'Sports'),
 (9, 'Technology'),
-(3, 'Travel');
+(3, 'Travel'),
+(10, 'Photography'),
+(11, 'Dancing'),
+(12, 'Gardening'),
+(13, 'Fitness'),
+(14, 'Writing');
 
 -- --------------------------------------------------------
 
@@ -57,7 +62,6 @@ CREATE TABLE `Hobbies` (
   `hobbyID` int NOT NULL,
   `hobbyName` varchar(100) NOT NULL,
   `description` text,
-  `ownerID` int NOT NULL,
   `categoryID` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -65,20 +69,28 @@ CREATE TABLE `Hobbies` (
 -- Dumping data for table `Hobbies`
 --
 
-INSERT INTO `Hobbies` (`hobbyID`, `hobbyName`, `description`, `ownerID`, `categoryID`) VALUES
-(1, 'Oil Painting', 'Exploring oil painting techniques for beginners.', 1, 1),
-(2, 'Sketching', 'Basic sketching and shading lessons.', 2, 1),
-(3, 'Chess Club', 'A group for playing and improving chess skills.', 3, 2),
-(4, 'Travel Vlogging', 'Sharing travel experiences and tips.', 4, 3),
-(5, 'Book Club', 'Weekly book reading and discussion sessions.', 5, 4),
-(6, 'Cooking Class', 'Teaching different cultural cuisines.', 6, 5),
-(7, 'Football Training', 'Organized training for local football enthusiasts.', 8, 6),
-(8, 'Basketball Coaching', 'Teaching fundamental basketball skills.', 12, 6),
-(9, 'Guitar Jamming', 'Collaborative guitar jam sessions.', 9, 7),
-(10, 'Music Production', 'Creating beats and learning music software.', 13, 7),
-(11, 'Podcasting', 'Learning how to create and publish podcasts.', 10, 8),
-(12, 'Coding Bootcamp', 'Introduction to programming and web development.', 11, 9),
-(13, 'Drone Flying', 'Beginner drone flying tutorials.', 7, 9);
+INSERT INTO `Hobbies` (`hobbyID`, `hobbyName`, `description`, `categoryID`) VALUES
+(1, 'Oil Painting', 'Exploring oil painting techniques for beginners.', 1),
+(2, 'Sketching', 'Basic sketching and shading lessons.', 1),
+(3, 'Chess Club', 'A group for playing and improving chess skills.', 2),
+(4, 'Travel Vlogging', 'Sharing travel experiences and tips.', 3),
+(5, 'Book Club', 'Weekly book reading and discussion sessions.', 4),
+(6, 'Cooking Class', 'Teaching different cultural cuisines.', 5),
+(7, 'Football Training', 'Organized training for local football enthusiasts.', 6),
+(8, 'Basketball Coaching', 'Teaching fundamental basketball skills.', 6),
+(9, 'Guitar Jamming', 'Collaborative guitar jam sessions.', 7),
+(10, 'Music Production', 'Creating beats and learning music software.', 7),
+(11, 'Podcasting', 'Learning how to create and publish podcasts.', 8),
+(12, 'Coding Bootcamp', 'Introduction to programming and web development.', 9),
+(13, 'Drone Flying', 'Beginner drone flying tutorials.', 9),
+(14, 'Digital Photography', 'Learn the basics of digital photography and editing.', 10),
+(15, 'Salsa Dancing', 'Join our salsa dancing classes for all levels.', 11),
+(16, 'Urban Gardening', 'Tips and tricks for gardening in small spaces.', 12),
+(17, 'Yoga Classes', 'Relaxing yoga sessions for beginners and intermediates.', 13),
+(18, 'Creative Writing', 'Workshops to improve your creative writing skills.', 14),
+(19, 'Street Photography', 'Capturing the essence of urban life through photography.', 10),
+(20, 'Zumba Fitness', 'High-energy Zumba classes to keep you fit.', 13),
+(21, 'Volleyball', 'A fun environment to play and improve your skills', 6);
 
 -- --------------------------------------------------------
 
@@ -108,7 +120,15 @@ INSERT INTO `Hobby_Tags` (`hobbyID`, `tagID`) VALUES
 (12, 3),
 (7, 4),
 (8, 4),
-(10, 4);
+(10, 4),
+(14, 1),
+(15, 2),
+(16, 1),
+(17, 2),
+(18, 3),
+(19, 2),
+(20, 4),
+(21, 4);
 
 -- --------------------------------------------------------
 
@@ -133,7 +153,12 @@ INSERT INTO `Messages` (`messageID`, `senderID`, `receiverID`, `content`) VALUES
 (3, 6, 9, 'Hey its Ben, I am interested in your football training sessions.'),
 (4, 10, 11, 'Can you teach me how to use the podcasting equipment?'),
 (5, 4, 13, 'Hey Kanye, I’d like to learn more about Music from you.'),
-(6, 8, 12, 'Do you teach basketball moves and skills');
+(6, 8, 12, 'Do you teach basketball moves and skills'),
+(7, 14, 15, 'Hi Tom, I would love to join your salsa dancing classes!'),
+(8, 16, 17, 'Hey Brad, can you tell me more about your yoga classes?'),
+(9, 18, 19, 'Hi Chris, I am interested in your street photography sessions.'),
+(10, 20, 14, 'Emma, can you recommend a good camera for beginners?'),
+(11, 15, 16, 'Angelina, I would like to learn more about urban gardening.');
 
 -- --------------------------------------------------------
 
@@ -146,7 +171,7 @@ CREATE TABLE `Reviews` (
   `userID` int NOT NULL,
   `rating` int DEFAULT NULL,
   `comments` text
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `Reviews`
@@ -158,7 +183,14 @@ INSERT INTO `Reviews` (`reviewID`, `userID`, `rating`, `comments`) VALUES
 (5, 6, 5, 'Football training was really professional and fun!'),
 (6, 10, 3, 'The podcast equipment was slightly outdated other studios dont have thee same equipment'),
 (7, 4, 5, 'Kanye was an amazing Musician.'),
-(8, 8, 4, 'Lebron James is the best ive seen at basketball.');
+(8, 8, 4, 'Lebron James is the best ive seen at basketball.'),
+(9, 14, 5, 'Digital photography class was very informative.'),
+(10, 15, 4, 'Salsa dancing was fun and well-organized.'),
+(11, 16, 5, 'Urban gardening tips were very practical.'),
+(12, 17, 4, 'Yoga classes were relaxing and well-taught.'),
+(13, 18, 5, 'Creative writing workshop was inspiring.'),
+(14, 19, 4, 'Street photography session was very engaging.'),
+(15, 20, 5, 'Zumba fitness class was energetic and fun.');
 
 -- --------------------------------------------------------
 
@@ -192,219 +224,130 @@ CREATE TABLE `Users` (
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `dob` DATE DEFAULT NULL,
-  `gender` VARCHAR(50) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `gender` varchar(50) DEFAULT NULL,
   `location` varchar(100) DEFAULT NULL,
-  `travel_locations` VARCHAR(255) DEFAULT NULL,
-  `dob` DATE DEFAULT NULL,
-  `gender` VARCHAR(50) DEFAULT NULL,
-  `location` varchar(100) DEFAULT NULL,
-  `travel_locations` VARCHAR(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `travel_locations` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `hobbies` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `Users`
 --
 
-INSERT INTO `Users` (`userID`, `name`, `email`, `location`, `created_at`) VALUES
-(1, 'Stiles Stevens', 'stiles@hobbylobby.com', 'West London', '2025-02-26 20:54:52'),
-(2, 'Jessica Davis', 'jessica@hobbylobby.com', 'North London', '2025-02-26 20:54:52'),
-(3, 'Edward Cullen', 'edward@hobbylobby.com', 'East London', '2025-02-26 20:54:52'),
-(4, 'Dexter Morgan', 'dexter@hobbylobby.com', 'South London', '2025-02-26 20:54:52'),
-(5, 'Brian Moser', 'brian@hobbylobby.com', 'East London', '2025-02-26 20:54:52'),
-(6, 'Ben Parker', 'ben@hobbylobby.com', 'North London', '2025-02-26 20:54:52'),
-(7, 'Becky Smith', 'becky@hobbylobby.com', 'West London', '2025-02-26 20:54:52'),
-(8, 'John Terry', 'john@hobbylobby.com', 'East London', '2025-02-26 20:54:52'),
-(9, 'Frank Lampard', 'frank@hobbylobby.com', 'South London', '2025-02-26 20:54:52'),
-(10, 'Oliver Queen', 'oliver@hobbylobby.com', 'Central London', '2025-02-26 20:54:52'),
-(11, 'Cole Bennett', 'Cole@hobbylobby.com', 'Central London', '2025-02-26 20:54:52'),
-(12, 'Lebron James', 'lebron@hobbylobby.com', 'South London', '2025-02-26 20:54:52'),
-(13, 'Kanye West', 'kanye@hobbylobby.com', 'Central London', '2025-02-26 20:54:52');
+INSERT INTO `Users` (`userID`, `name`, `email`, `password`, `dob`, `gender`, `location`, `travel_locations`, `created_at`, `hobbies`) VALUES
+(1, 'Stiles Stevens', 'stiles@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2000-04-17', 'Other', 'West London', 'South London, West London', '2025-02-26 20:54:52', NULL),
+(2, 'Jessica Davis', 'jessica@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2005-03-01', 'Female', 'North London', 'North London, Central London', '2025-02-26 20:54:52', NULL),
+(3, 'Edward Cullen', 'edward@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2006-11-19', 'Female', 'East London', 'Central London, East London, North London', '2025-02-26 20:54:52', NULL),
+(4, 'Dexter Morgan', 'dexter@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2001-01-31', 'Female', 'South London', 'North London, South London, Central London', '2025-02-26 20:54:52', NULL),
+(5, 'Brian Moser', 'brian@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2002-09-21', 'Male', 'East London', 'Central London, East London', '2025-02-26 20:54:52', NULL),
+(6, 'Ben Parker', 'ben@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1990-08-18', 'Male', 'West London', 'South London, West London', '2025-02-26 20:54:52', NULL),
+(7, 'Becky Smiths', 'becky@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1996-07-27', 'Female', 'North London', 'North London, South London', '2025-02-26 20:54:52', NULL),
+(8, 'John Terry', 'john@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1999-06-12', 'Male', 'East London', 'East London, Central London, North London', '2025-02-26 20:54:52', NULL),
+(9, 'Frank Lampard', 'frank@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1989-04-10', 'Male', 'South London', 'South London, West London, East London', '2025-02-26 20:54:52', NULL),
+(10, 'Oliver Queen', 'oliver@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1986-05-07', 'Male', 'South London', 'South London, West London', '2025-02-26 20:54:52', NULL),
+(11, 'Cole Bennett', 'cole@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2004-04-09', 'Male', 'Central London', 'Central London, North London', '2025-02-26 20:54:52', NULL),
+(12, 'Lebron James', 'lebron@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1983-10-02', 'Male', 'South London', 'South London, Central London', '2025-02-26 20:54:52', NULL),
+(13, 'Kanye West', 'kanye@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2000-12-22', 'Male', 'Central London', 'Central London, North London, East London', '2025-02-26 20:54:52', NULL),
+(14, 'Emma Watson', 'emma@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1972-11-16', 'Female', 'West London', 'South London, West London', '2025-02-26 20:54:52', NULL),
+(15, 'Tom Hanks', 'tom@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1965-03-03', 'Male', 'North London', 'North London, Central London, East London', '2025-02-26 20:54:52', NULL),
+(16, 'Angelina Jolie', 'angelina@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1994-04-14', 'Male', 'East London', 'East London, South London, Central London', '2025-02-26 20:54:52', NULL),
+(17, 'Bradd Pitt', 'brad@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2001-04-17', 'Male', 'South London', 'South London, Central London, West London', '2025-02-26 20:54:52', NULL),
+(18, 'Chris Hemsworth', 'thor@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1991-05-10', 'Male', 'West London', 'West London, Central London, North London', '2025-02-26 20:54:52', NULL),
+(19, 'Scarlett Johansson', 'widow@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2010-08-27', 'Female', 'Central London', 'Central London, North London, East London', '2025-02-26 20:54:52', NULL),
+(20, 'Jennifer Lawrence', 'jenn@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1992-02-21', 'Male', 'North London', 'North London, Central London, West London', '2025-02-26 20:54:52', NULL),
+(28, 'Ramzi Salah', 'ramboss@hobbylobby.com', '$2b$10$cG/NC4UsfzMl8uyDm8UlfO03KBpuE4Xdu2Rgmc3g9D87/mLpSt3D.', '2004-03-10', 'male', 'North London', 'North London, East London, Central London, West London', '2025-04-04 10:35:21', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `User_Hobbies`
+--
+
+CREATE TABLE `User_Hobbies` (
+  `userID` int NOT NULL,
+  `hobbyID` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `User_Hobbies`
+--
+
+INSERT INTO `User_Hobbies` (`userID`, `hobbyID`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(8, 7),
+(12, 8),
+(9, 9),
+(13, 10),
+(10, 11),
+(11, 12),
+(7, 13),
+(14, 14),
+(15, 15),
+(16, 16),
+(17, 17),
+(18, 18),
+(19, 19),
+(20, 20),
+(28, 21);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `Categories`
---
-ALTER TABLE `Categories`
-  ADD PRIMARY KEY (`categoryID`),
-  ADD UNIQUE KEY `name` (`name`);
-
---
 -- Indexes for table `Hobbies`
 --
 ALTER TABLE `Hobbies`
-  ADD PRIMARY KEY (`hobbyID`),
-  ADD KEY `ownerID` (`ownerID`),
-  ADD KEY `categoryID` (`categoryID`);
-
---
--- Indexes for table `Hobby_Tags`
---
-ALTER TABLE `Hobby_Tags`
-  ADD PRIMARY KEY (`hobbyID`,`tagID`),
-  ADD KEY `tagID` (`tagID`);
-
---
--- Indexes for table `Messages`
---
-ALTER TABLE `Messages`
-  ADD PRIMARY KEY (`messageID`),
-  ADD KEY `senderID` (`senderID`),
-  ADD KEY `receiverID` (`receiverID`);
-
---
--- Indexes for table `Reviews`
---
-ALTER TABLE `Reviews`
-  ADD PRIMARY KEY (`reviewID`),
-  ADD KEY `userID` (`userID`);
-
---
--- Indexes for table `Tags`
---
-ALTER TABLE `Tags`
-  ADD PRIMARY KEY (`tagID`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD PRIMARY KEY (`hobbyID`);
 
 --
 -- Indexes for table `Users`
 --
 ALTER TABLE `Users`
-  ADD PRIMARY KEY (`userID`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD PRIMARY KEY (`userID`);
+
+--
+-- Indexes for table `User_Hobbies`
+--
+ALTER TABLE `User_Hobbies`
+  ADD PRIMARY KEY (`userID`,`hobbyID`),
+  ADD KEY `user_hobbies_ibfk_2` (`hobbyID`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `Categories`
---
-ALTER TABLE `Categories`
-  MODIFY `categoryID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
 -- AUTO_INCREMENT for table `Hobbies`
 --
 ALTER TABLE `Hobbies`
-  MODIFY `hobbyID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT for table `Messages`
---
-ALTER TABLE `Messages`
-  MODIFY `messageID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `Reviews`
---
-ALTER TABLE `Reviews`
-  MODIFY `reviewID` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Tags`
---
-ALTER TABLE `Tags`
-  MODIFY `tagID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `hobbyID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `userID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `userID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `Hobbies`
+-- Constraints for table `User_Hobbies`
 --
-ALTER TABLE `Hobbies`
-  ADD CONSTRAINT `hobbies_ibfk_1` FOREIGN KEY (`ownerID`) REFERENCES `Users` (`userID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `hobbies_ibfk_2` FOREIGN KEY (`categoryID`) REFERENCES `Categories` (`categoryID`) ON DELETE CASCADE;
-
---
--- Constraints for table `Hobby_Tags`
---
-ALTER TABLE `Hobby_Tags`
-  ADD CONSTRAINT `hobby_tags_ibfk_1` FOREIGN KEY (`hobbyID`) REFERENCES `Hobbies` (`hobbyID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `hobby_tags_ibfk_2` FOREIGN KEY (`tagID`) REFERENCES `Tags` (`tagID`) ON DELETE CASCADE;
-
---
--- Constraints for table `Messages`
---
-ALTER TABLE `Messages`
-  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`senderID`) REFERENCES `Users` (`userID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`receiverID`) REFERENCES `Users` (`userID`) ON DELETE CASCADE;
-
---
--- Constraints for table `Reviews`
---
-ALTER TABLE `Reviews`
-  ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `Users` (`userID`) ON DELETE CASCADE;
+ALTER TABLE `User_Hobbies`
+  ADD CONSTRAINT `user_hobbies_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `Users` (`userID`),
+  ADD CONSTRAINT `user_hobbies_ibfk_2` FOREIGN KEY (`hobbyID`) REFERENCES `Hobbies` (`hobbyID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
--- Additional Users
-INSERT INTO `Users` (`userID`, `name`, `email`, `location`, `created_at`) VALUES
-(14, 'Emma Watson', 'emma@hobbylobby.com', 'West London', '2025-02-27 10:00:00'),
-(15, 'Tom Hanks', 'tom@hobbylobby.com', 'North London', '2025-02-27 10:05:00'),
-(16, 'Angelina Jolie', 'angelina@hobbylobby.com', 'East London', '2025-02-27 10:10:00'),
-(17, 'Brad Pitt', 'brad@hobbylobby.com', 'South London', '2025-02-27 10:15:00'),
-(18, 'Scarlett Johansson', 'scarlett@hobbylobby.com', 'Central London', '2025-02-27 10:20:00'),
-(19, 'Chris Hemsworth', 'chris@hobbylobby.com', 'West London', '2025-02-27 10:25:00'),
-(20, 'Jennifer Lawrence', 'jennifer@hobbylobby.com', 'North London', '2025-02-27 10:30:00');
-
--- Additional Categories
-INSERT INTO `Categories` (`categoryID`, `name`) VALUES
-(10, 'Photography'),
-(11, 'Dancing'),
-(12, 'Gardening'),
-(13, 'Fitness'),
-(14, 'Writing');
-
--- Additional Hobbies
-INSERT INTO `Hobbies` (`hobbyID`, `hobbyName`, `description`, `ownerID`, `categoryID`) VALUES
-(14, 'Digital Photography', 'Learn the basics of digital photography and editing.', 14, 10),
-(15, 'Salsa Dancing', 'Join our salsa dancing classes for all levels.', 15, 11),
-(16, 'Urban Gardening', 'Tips and tricks for gardening in small spaces.', 16, 12),
-(17, 'Yoga Classes', 'Relaxing yoga sessions for beginners and intermediates.', 17, 13),
-(18, 'Creative Writing', 'Workshops to improve your creative writing skills.', 18, 14),
-(19, 'Street Photography', 'Capturing the essence of urban life through photography.', 19, 10),
-(20, 'Zumba Fitness', 'High-energy Zumba classes to keep you fit.', 20, 13);
-
--- Additional Hobby_Tags
-INSERT INTO `Hobby_Tags` (`hobbyID`, `tagID`) VALUES
-(14, 1),
-(15, 2),
-(16, 1),
-(17, 2),
-(18, 3),
-(19, 2),
-(20, 4);
-
--- Additional Messages
-INSERT INTO `Messages` (`messageID`, `senderID`, `receiverID`, `content`) VALUES
-(7, 14, 15, 'Hi Tom, I would love to join your salsa dancing classes!'),
-(8, 16, 17, 'Hey Brad, can you tell me more about your yoga classes?'),
-(9, 18, 19, 'Hi Chris, I am interested in your street photography sessions.'),
-(10, 20, 14, 'Emma, can you recommend a good camera for beginners?'),
-(11, 15, 16, 'Angelina, I would like to learn more about urban gardening.');
-
--- Additional Reviews
-INSERT INTO `Reviews` (`reviewID`, `userID`, `rating`, `comments`) VALUES
-(9, 14, 5, 'Digital photography class was very informative.'),
-(10, 15, 4, 'Salsa dancing was fun and well-organized.'),
-(11, 16, 5, 'Urban gardening tips were very practical.'),
-(12, 17, 4, 'Yoga classes were relaxing and well-taught.'),
-(13, 18, 5, 'Creative writing workshop was inspiring.'),
-(14, 19, 4, 'Street photography session was very engaging.'),
-(15, 20, 5, 'Zumba fitness class was energetic and fun.');
