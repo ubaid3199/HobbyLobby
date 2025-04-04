@@ -191,7 +191,16 @@ CREATE TABLE `Users` (
   `userID` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `dob` DATE DEFAULT NULL,
+  `gender` VARCHAR(50) DEFAULT NULL,
   `location` varchar(100) DEFAULT NULL,
+  `travel_locations` VARCHAR(255) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `dob` DATE DEFAULT NULL,
+  `gender` VARCHAR(50) DEFAULT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `travel_locations` VARCHAR(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

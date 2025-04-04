@@ -1,5 +1,6 @@
 // Import express.js
 const express = require("express");
+const session = require('express-session');
 
 // Create express app
 var app = express();
@@ -11,6 +12,14 @@ app.set('views', './app/views');
 // Add static files location
 app.use(express.static("static"));
 
+app.use(session({
+  secret: 'your-secret-key', // Replace with a strong, random key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true in production if using HTTPS
+}));
+
+
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: false }));
 
@@ -19,22 +28,56 @@ const db = require('./services/db');
 
 // Create a route for root
 app.get("/", function(req, res) {
-    res.render("home");
-});
-
-app.get("/signup", function(req, res) {
-    res.render("signup");
+  res.redirect("/home");
 });
 
 app.get("/signin", function(req, res) {
-    res.render("signin");
+  res.render("signin");
+});
+
+app.get("/home", function(req, res) {
+  res.render("home");
+});
+
+app.get("/profile", async function(req, res) {
+  try {
+    const userId = req.session.userID;
+    console.log("User ID from session:", userId);
+    if (!userId) {
+      console.log("User ID not found in session");
+      return res.status(401).send("Unauthorized");
+    }
+    const query = "SELECT * FROM Users WHERE userID = ?";
+    const values = [userId];
+    try {
+      const results = await db.query(query, values);
+      if (results.length > 0) {
+        const user = results[0];
+        res.render("profile", { user: user });
+      } else {
+        console.log("User not found in database with ID:", userId);
+        res.status(404).send("User not found");
+      }
+    } catch (dbError) {
+      console.error("Error querying database:", dbError);
+      res.status(500).send("Internal Server Error");
+    }
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+app.get("/signup", function(req, res) {
+  res.render("signup");
 });
 
 app.get("/1", function(req, res) {
-    res.render("1", { user: {}, userTag: "", hobbies: [], messages: [] });
+  res.render("1", { user: {}, userTag: "", hobbies: [], messages: [] });
 });
 
-app.post("/signup", function(req, res) {
+app.post("/signup", async function(req, res) {
   console.log("Sign up form data:", req.body);
   const { firstName, lastName, email, password, dob, gender, locationBased, travelLocation } = req.body;
 
@@ -46,15 +89,73 @@ app.post("/signup", function(req, res) {
       travelLocations = [req.body.travelLocation];
     }
   }
-  // TODO: Implement user creation logic
-  res.send("Sign up successful!");
+  // Convert travelLocations array to a comma-separated string
+  const travelLocationsString = travelLocations.join(', ');
+
+  // Combine first and last name into a single name field
+  const fullName = `${firstName} ${lastName}`;
+
+  // Database query to insert user data
+  const query = "INSERT INTO Users (name, email, password, dob, gender, location, travel_locations) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  // TODO: Hash the password before saving it to the database
+  const values = [fullName, email, password, dob, gender, locationBased, travelLocationsString];
+
+  // Add password column if it doesn't exist
+  const alterTableQuery = "ALTER TABLE Users ADD COLUMN password VARCHAR(255) NOT NULL";
+  try {
+    await db.query(alterTableQuery);
+    console.log("Password column added successfully");
+  } catch (alterTableError) {
+    console.error("Error adding password column:", alterTableError);
+  }
+
+  db.query(query, values)
+    .then(() => {
+      console.log("User created successfully");
+      res.send("Sign up successful!");
+    })
+    .catch(err => {
+      console.error("Error creating user:", err);
+      res.status(500).send("Error signing up");
+    });
 });
 
 app.post("/signin", function(req, res) {
-  console.log("Sign in form data:", req.body);
-  // TODO: Implement authentication logic
-  res.send("Sign in successful!");
-});
+  const { email, password } = req.body;
+
+  // Database query to find user by email
+  const query = "SELECT * FROM Users WHERE email = ?";
+  const values = [email];
+
+  db.query(query, values)
+    .then(results => {
+      if (results.length > 0) {
+        const user = results[0];
+        // Check if the password matches
+        if (password === user.password) { // Replace "password" with actual password hashing logic
+          console.log("Sign in successful");
+          try {
+            req.session.userID = user.userID;
+            console.log("User ID stored in session:", req.session.userID);
+            res.redirect("/home");
+          } catch (sessionError) {
+            console.error("Error storing user ID in session:", sessionError);
+            res.status(500).send("Error signing in");
+          }
+        } else {
+          console.log("Incorrect password");
+          res.status(401).send("Incorrect password");
+        }
+      } else {
+        console.log("User not found");
+        res.status(404).send("User not found");
+      }
+    })
+    .catch(err => {
+      console.error("Error signing in:", err);
+      res.status(500).send("Error signing in");
+    });
+  });
 
 app.get("/detail", function(req, res) {
     res.render("detail", { hobby: {}, tags: [] });

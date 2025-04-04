@@ -3,13 +3,12 @@ html
     head
         title HobbyLobby
         link(rel="stylesheet", href="/styles.css")
-        a(href="/")
-         img(src="/images/logo.png", alt="HobbyLobby", style="max-height: 6vw;")
-        a(href="/users")
-         img(src="/images/users.png", alt="HobbyLobby", style="max-height: 6vw;")
-        a(href="/listings")
-         img(src="/images/listings.png", alt="HobbyLobby", style="max-height: 6vw;")
-        a(href="/listings")
-         img(src="/images/signin.png", alt="HobbyLobby", style="max-height: 6vw;", align="right")
-    body(style="background-image: url('/images/backgroung.png'); background-size: cover; background-repeat: no-repeat;")
+    body
+      .header
+        a(href="/") HobbyLobby
+        nav
+          a(href="/users") Users
+          a(href="/listings") Listings
+          a(href="/profile") Profile
+      .content
         block content
