@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 04, 2025 at 11:34 PM
+-- Generation Time: Apr 05, 2025 at 01:08 AM
 -- Server version: 9.2.0
 -- PHP Version: 8.2.27
 
@@ -90,7 +90,8 @@ INSERT INTO `Hobbies` (`hobbyID`, `hobbyName`, `description`, `categoryID`) VALU
 (18, 'Creative Writing', 'Workshops to improve your creative writing skills.', 14),
 (19, 'Street Photography', 'Capturing the essence of urban life through photography.', 10),
 (20, 'Zumba Fitness', 'High-energy Zumba classes to keep you fit.', 13),
-(21, 'Volleyball', 'A fun environment to play and improve your skills', 6);
+(21, 'Volleyball', 'A fun environment to play and improve your skills', 6),
+(22, 'TryE1', 'abc', 14);
 
 -- --------------------------------------------------------
 
@@ -128,7 +129,8 @@ INSERT INTO `Hobby_Tags` (`hobbyID`, `tagID`) VALUES
 (18, 3),
 (19, 2),
 (20, 4),
-(21, 4);
+(21, 4),
+(22, 4);
 
 -- --------------------------------------------------------
 
@@ -159,7 +161,9 @@ INSERT INTO `Messages` (`messageID`, `senderID`, `receiverID`, `content`) VALUES
 (9, 18, 19, 'Hi Chris, I am interested in your street photography sessions.'),
 (10, 20, 14, 'Emma, can you recommend a good camera for beginners?'),
 (11, 15, 16, 'Angelina, I would like to learn more about urban gardening.'),
-(12, 28, 5, 'Hi waas curious about getting in touch to learn more about the hobby you teach');
+(12, 28, 5, 'Hi waas curious about getting in touch to learn more about the hobby you teach'),
+(13, 29, 28, 'yooooo\r\n'),
+(14, 29, 28, 'try 123');
 
 -- --------------------------------------------------------
 
@@ -258,7 +262,8 @@ INSERT INTO `Users` (`userID`, `name`, `email`, `password`, `dob`, `gender`, `lo
 (18, 'Chris Hemsworth', 'thor@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1991-05-10', 'Male', 'West London', 'West London, Central London, North London', '2025-02-26 20:54:52', NULL),
 (19, 'Scarlett Johansson', 'widow@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '2010-08-27', 'Female', 'Central London', 'Central London, North London, East London', '2025-02-26 20:54:52', NULL),
 (20, 'Jennifer Lawrence', 'jenn@hobbylobby.com', '$2a$10$7ZbfOqPqjV/SKDY4sAzxpeNkUVEQo8yTO5J1ZQHyLU2LK2GpT6CFi', '1992-02-21', 'Male', 'North London', 'North London, Central London, West London', '2025-02-26 20:54:52', NULL),
-(28, 'Ramzi Salah', 'ramboss@hobbylobby.com', '$2b$10$cG/NC4UsfzMl8uyDm8UlfO03KBpuE4Xdu2Rgmc3g9D87/mLpSt3D.', '2004-03-10', 'male', 'North London', 'North London, East London, Central London, West London', '2025-04-04 10:35:21', NULL);
+(28, 'Ramzi Salah', 'ramboss@hobbylobby.com', '$2b$10$cG/NC4UsfzMl8uyDm8UlfO03KBpuE4Xdu2Rgmc3g9D87/mLpSt3D.', '2004-03-10', 'male', 'North London', 'North London, East London, Central London, West London', '2025-04-04 10:35:21', NULL),
+(29, 'Ehtesham Mumtaz', 'pkhackers7@gmail.com', '$2b$10$/Tj9BCCa5vcaDFbh6KVpEut8osIp1NuqxOZE2LEOZVR07Y3LcvlmK', '2000-01-01', 'male', 'West London', 'North London, South London', '2025-04-05 01:02:07', NULL);
 
 -- --------------------------------------------------------
 
@@ -296,7 +301,8 @@ INSERT INTO `User_Hobbies` (`userID`, `hobbyID`) VALUES
 (18, 18),
 (19, 19),
 (20, 20),
-(28, 21);
+(28, 21),
+(29, 22);
 
 --
 -- Indexes for dumped tables
@@ -335,19 +341,19 @@ ALTER TABLE `User_Hobbies`
 -- AUTO_INCREMENT for table `Hobbies`
 --
 ALTER TABLE `Hobbies`
-  MODIFY `hobbyID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `hobbyID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `Messages`
 --
 ALTER TABLE `Messages`
-  MODIFY `messageID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `messageID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `userID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `userID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
