@@ -50,7 +50,7 @@ app.get("/signout", function (req, res) {
       res.redirect("/signin");
     });
   });
-  
+
 app.get("/home", async function(req, res) {
     try {
       // Verify session
@@ -104,8 +104,17 @@ app.get("/home", async function(req, res) {
         hobbiesQuery += ' WHERE ' + whereClauses.join(' AND ');
       }
   
-      hobbiesQuery += ' GROUP BY H.hobbyID ORDER BY H.hobbyID DESC';
-  
+      hobbiesQuery += `
+      GROUP BY 
+        H.hobbyID, 
+        H.hobbyName, 
+        C.name, 
+        U.name, 
+        H.description, 
+        U.userID 
+      ORDER BY H.hobbyID DESC
+    `;
+          
       const hobbies = await db.query(hobbiesQuery, queryParams);
   
       res.render("home", { 
@@ -121,7 +130,7 @@ app.get("/home", async function(req, res) {
       });
     }
   });
-
+  
 app.get("/profile", async function (req, res) {
   try {
     const userId = req.session.userID;
