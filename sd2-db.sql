@@ -175,7 +175,8 @@ CREATE TABLE `Reviews` (
   `reviewID` int NOT NULL,
   `userID` int NOT NULL,
   `rating` int DEFAULT NULL,
-  `comments` text
+  `comments` text,
+  `reviewerID` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

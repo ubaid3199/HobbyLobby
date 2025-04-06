@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1 Message Thread
+
+  if messages && messages.length > 0
+    ul
+      each message in messages
+        li
+          strong From: #{message.senderName}
+          |  To: #{message.receiverName}
+          p #{message.content}
+
+  else
+    p No messages found.
+
+  form(action=`/messages/${otherUserId}` method="post")
+    textarea(name="content" placeholder="Reply to this message")
+    button(type="submit") Send Reply

@@ -16,7 +16,7 @@ block content
 
     div.form-group
         label(for="dob") Date of Birth:
-        input(type="date", name="dob", id="dob", value=user.dob)
+        input(type="date", name="dob", id="dob", value= user.dob ? user.dob.toISOString().split('T')[0] : null)
 
     div.form-group
         label(for="gender") Gender:
@@ -30,7 +30,20 @@ block content
         input(type="text", name="location", id="location", value=user.location)
 
     div.form-group
-        label(for="travel_locations") Travel Locations:
-        input(type="text", name="travel_locations", id="travel_locations", value=user.travel_locations)
-
+      label Travel Locations:
+      div
+        input(type="checkbox", name="travel_locations", id="north_london", value="North London")
+        label(for="north_london") North London
+      div
+        input(type="checkbox", name="travel_locations", id="south_london", value="South London")
+        label(for="south_london") South London
+      div
+        input(type="checkbox", name="travel_locations", id="east_london", value="East London")
+        label(for="east_london") East London
+      div
+        input(type="checkbox", name="travel_locations", id="west_london", value="West London")
+        label(for="west_london") West London
+      div
+        input(type="checkbox", name="travel_locations", id="central_london", value="Central London")
+        label(for="central_london") Central London
     button(type="submit") Update Profile

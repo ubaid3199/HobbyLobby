@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Messages
+
+  if users && users.length > 0
+    ul
+      each user in users
+        li
+          a(href=`/messages/${user.otherUserID}`) #{user.otherUserName}
+  else
+    p No messages found.

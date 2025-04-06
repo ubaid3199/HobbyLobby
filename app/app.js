@@ -41,8 +41,38 @@ app.get("/signin", function(req, res) {
   res.render("signin");
 });
 
-app.get("/home", function(req, res) {
-  res.render("home");
+app.get("/home", async function(req, res) {
+  try {
+    const userId = req.session.userID;
+
+    const userQuery = "SELECT travel_locations FROM Users WHERE userID = ?";
+    const userResult = await db.query(userQuery, [userId]);
+    const user = userResult[0];
+    const travelLocations = user.travel_locations ? user.travel_locations.split(', ') : [];
+
+    let hobbiesQuery = `
+      SELECT Hobbies.hobbyID, Hobbies.hobbyName, Categories.name AS category, Users.name AS owner, Hobbies.description, Users.userID AS userID
+      FROM Hobbies
+      JOIN Categories ON Hobbies.categoryID = Categories.categoryID
+      JOIN User_Hobbies ON Hobbies.hobbyID = User_Hobbies.hobbyID
+      JOIN Users ON User_Hobbies.userID = Users.userID`;
+
+    let queryParams = [];
+
+    if (travelLocations.length > 0) {
+      hobbiesQuery += " WHERE Users.location IN (" + travelLocations.map(() => '?').join(', ') + ")";
+      queryParams.push(...travelLocations);
+    }
+
+    hobbiesQuery += " ORDER BY Hobbies.hobbyID DESC";
+
+    const hobbies = await db.query(hobbiesQuery, queryParams);
+
+    res.render("home", { hobbies });
+  } catch (error) {
+    console.error("Error fetching hobbies:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.get("/profile", async function (req, res) {
@@ -148,12 +178,34 @@ app.get("/message/:receiverID", async (req, res) => {
   });
 });
 
+app.get("/post_hobby", async function(req, res) {
+  const categories = await db.query("SELECT * FROM Categories");
+  const tags = await db.query("SELECT * FROM Tags");
+  res.render("post_hobby", { categories, tags });
+});
+
 app.get("/signup", async function(req, res) {
   const categories = await db.query("SELECT * FROM Categories");
   const tags = await db.query("SELECT * FROM Tags");
   res.render("signup", { categories, tags });
 });
 
+app.post("/post_hobby", async function(req, res) {
+  try {
+    console.log("Post hobby form data:", req.body);
+    const { hobbyName, description, categoryID } = req.body;
+
+    const insertHobbyQuery = `
+      INSERT INTO Hobbies (hobbyName, description, categoryID)
+      VALUES (?, ?, ?)`;
+    const hobbyResult = await db.query(insertHobbyQuery, [hobbyName, description, categoryID]);
+
+    res.redirect("/home");
+  } catch (err) {
+    console.error("Error during signup:", err);
+    res.status(500).send("Error signing up");
+  }
+});
 
 app.get("/1", function(req, res) {
   res.render("1", { user: {}, userTag: "", hobbies: [], messages: [] });
@@ -247,13 +299,20 @@ app.post("/edit-profile", async function (req, res) {
     const userId = req.session.userID;
     if (!userId) return res.status(401).send("Unauthorized");
 
-    const { name, email, dob, gender, location, travel_locations } = req.body;
+    const { name, email, dob, gender, location } = req.body;
+    let travel_locations = req.body.travel_locations;
+
+    if (typeof travel_locations === 'string') {
+      travel_locations = [travel_locations];
+    }
+
+    const travelLocationsString = travel_locations ? travel_locations.join(', ') : '';
 
     const updateQuery = `
       UPDATE Users
       SET name = ?, email = ?, dob = ?, gender = ?, location = ?, travel_locations = ?
       WHERE userID = ?`;
-    const values = [name, email, dob, gender, location, travel_locations, userId];
+    const values = [name, email, dob, gender, location, travelLocationsString, userId];
 
     await db.query(updateQuery, values);
 
@@ -478,6 +537,103 @@ app.get("/test-bcrypt", async (req, res) => {
   res.send(match ? "✅ Bcrypt is working!" : "❌ Bcrypt failed.");
 });
 
+// Messages route
+app.get("/messages", async function (req, res) {
+  try {
+    const userId = req.session.userID;
+    if (!userId) return res.status(401).send("Unauthorized");
+
+    const users = await db.query(`
+      SELECT DISTINCT
+        CASE
+          WHEN sender.userID = ? THEN receiver.userID
+          ELSE sender.userID
+        END AS otherUserID,
+        CASE
+          WHEN sender.userID = ? THEN receiver.name
+          ELSE sender.name
+        END AS otherUserName
+      FROM Messages
+      JOIN Users AS sender ON Messages.senderID = sender.userID
+      JOIN Users AS receiver ON Messages.receiverID = receiver.userID
+      WHERE sender.userID = ? OR receiver.userID = ?
+    `, [userId, userId, userId, userId]);
+
+    res.render("messages", { users });
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post("/reply/:receiverID", async (req, res) => {
+  const senderID = req.session.userID;
+  const receiverID = req.params.receiverID;
+  const { content } = req.body;
+
+  if (!senderID) {
+    return res.redirect("/signin");
+  }
+
+  try {
+    const insertQuery = `
+      INSERT INTO Messages (senderID, receiverID, content)
+      VALUES (?, ?, ?)`;
+
+    await db.query(insertQuery, [senderID, receiverID, content]);
+
+    res.redirect("/messages");
+  } catch (err) {
+    console.error("Error sending message:", err);
+    res.status(500).send("Failed to send message.");
+  }
+});
+app.get("/messages/:userId", async function (req, res) {
+  try {
+    const userId = req.session.userID;
+    const otherUserId = req.params.userId;
+    if (!userId) return res.status(401).send("Unauthorized");
+
+    const messages = await db.query(`
+      SELECT sender.name AS senderName, sender.userID AS senderID, receiver.name AS receiverName, receiver.userID AS receiverID, Messages.content
+      FROM Messages
+      JOIN Users AS sender ON Messages.senderID = sender.userID
+      JOIN Users AS receiver ON Messages.receiverID = receiver.userID
+      WHERE (sender.userID = ? AND receiver.userID = ?) OR (sender.userID = ? AND receiver.userID = ?)
+      ORDER BY Messages.messageID
+    `, [userId, otherUserId, otherUserId, userId]);
+
+    res.render("message_thread", { messages, otherUserId });
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.post("/messages/:userId", async (req, res) => {
+  const senderID = req.session.userID;
+  const receiverID = req.params.userId;
+  const { content } = req.body;
+
+  if (!senderID) {
+    return res.redirect("/signin");
+  }
+
+  try {
+    const insertQuery = `
+      INSERT INTO Messages (senderID, receiverID, content)
+      VALUES (?, ?, ?)`;
+
+    await db.query(insertQuery, [senderID, receiverID, content]);
+
+    res.redirect(`/messages/${receiverID}`);
+  } catch (err) {
+    console.error("Error sending message:", err);
+    res.status(500).send("Failed to send message.");
+  }
+});
+
 app.listen(3000, () => {
   console.log(`Server running at http://127.0.0.1:3000/`);
 });
+
+

@@ -1,13 +1,17 @@
-extends layout.pug
+extends layout
 
 block content
-  h1 Welcome to HobbyLobby!
-  p Find and share your passions with others.
-  p Explore our community:
-  ul
-    li
-      a(href="/users") Browse Users
-    li
-      a(href="/listings") View Listings
-  p Join us today!
-  a(href="/signin", class="button") Sign Out
+  h1 Home
+
+  a(href="/post_hobby") Post Hobby
+
+  if hobbies && hobbies.length > 0
+    ul
+      each hobby in hobbies
+        li
+          strong #{hobby.hobbyName}
+          p #{hobby.description}
+          |  - #{hobby.category} - Posted by 
+          a(href=`/user/${hobby.userID}`) #{hobby.owner}
+  else
+    p No hobbies found.

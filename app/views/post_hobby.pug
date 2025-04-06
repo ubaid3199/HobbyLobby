@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1 Post a Hobby
+
+  form(method='post', action='/post_hobby')
+    div.form-group
+      label(for='hobbyName') Hobby Name:
+      input(type='text', id='hobbyName', name='hobbyName', required=true, class='form-control')
+
+    div.form-group
+      label(for='description') Hobby Description:
+      textarea(id='description', name='description', required=true, class='form-control')
+
+    div.form-group
+      label(for='categoryID') Hobby Category:
+      select(id='categoryID', name='categoryID', required=true, class='form-control')
+        option(value='') Select Category
+        each category in categories
+          option(value=category.categoryID)= category.name
+
+    div.form-group
+      label(for='tagID') Skill Level:
+      select(id='tagID', name='tagID', required=true, class='form-control')
+        option(value='') Select Skill Level
+        each tag in tags
+          option(value=tag.tagID)= tag.name
+
+
+    button(type='submit', class='button') Post Hobby
+  div(style='text-align: center;')
