@@ -41,6 +41,16 @@ app.get("/signin", function(req, res) {
   res.render("signin");
 });
 
+app.get("/signout", function (req, res) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).send("Error signing out");
+      }
+      res.redirect("/signin");
+    });
+  });
+  
 app.get("/home", async function(req, res) {
     try {
       // Verify session

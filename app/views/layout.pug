@@ -3,65 +3,18 @@ html
   head
     title HobbyLobby
     link(rel="stylesheet", href="/styles.css")
-  body(class="bg")  <!-- Ensure this line is correct -->
+  body(class="bg")
     .header
       a(href="/") HobbyLobby
       nav
         a(href="/users") Users
         a(href="/listings") Listings
         a(href="/profile") Profile
+        a(href="/messages") Messages
+        if user
+          a(href="/signout") Sign Out
+        else
+          a(href="/signin") Sign In
+          a(href="/signup") Sign Up
     .content
       block content
-app.get("/home", async function(req, res) {
-  try {
-    // Check if user is logged in
-    if (!req.session.userID) {
-      return res.redirect("/signin");
-    }
-
-    const userId = req.session.userID;
-
-    // Get user's travel locations
-    const userQuery = "SELECT travel_locations FROM Users WHERE userID = ?";
-    const userResult = await db.query(userQuery, [userId]);
-    
-    if (!userResult || userResult.length === 0) {
-      return res.status(404).send("User not found");
-    }
-
-    const user = userResult[0];
-    const travelLocations = user.travel_locations ? user.travel_locations.split(', ') : [];
-
-    // Build hobbies query
-    let hobbiesQuery = `
-      SELECT Hobbies.hobbyID, Hobbies.hobbyName, Categories.name AS category, 
-             Users.name AS owner, Hobbies.description, Users.userID AS userID
-      FROM Hobbies
-      JOIN Categories ON Hobbies.categoryID = Categories.categoryID
-      JOIN User_Hobbies ON Hobbies.hobbyID = User_Hobbies.hobbyID
-      JOIN Users ON User_Hobbies.userID = Users.userID
-      WHERE 1=1`; // Start with a true condition for easier WHERE clause building
-
-    let queryParams = [];
-
-    if (travelLocations.length > 0) {
-      hobbiesQuery += ` AND Users.location IN (${travelLocations.map(() => '?').join(', ')})`;
-      queryParams.push(...travelLocations);
-    }
-
-    hobbiesQuery += " ORDER BY Hobbies.hobbyID DESC";
-
-    const hobbies = await db.query(hobbiesQuery, queryParams);
-
-    res.render("home", { 
-      hobbies: hobbies || [], // Ensure hobbies is always an array
-      user: req.session.user || null 
-    });
-  } catch (error) {
-    console.error("Error fetching hobbies:", error);
-    res.status(500).render("error", { 
-      message: "Error loading home page",
-      error: error 
-    });
-  }
-});
