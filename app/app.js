@@ -234,18 +234,30 @@ app.get("/signup", async function(req, res) {
 
 app.post("/post_hobby", async function(req, res) {
   try {
-    console.log("Post hobby form data:", req.body);
-    const { hobbyName, description, categoryID } = req.body;
+    if (!req.session.userID) return res.redirect("/signin");
 
+    const userID = req.session.userID;
+    const { hobbyName, description, categoryID, tagID } = req.body;
+
+    // Insert into Hobbies
     const insertHobbyQuery = `
       INSERT INTO Hobbies (hobbyName, description, categoryID)
       VALUES (?, ?, ?)`;
     const hobbyResult = await db.query(insertHobbyQuery, [hobbyName, description, categoryID]);
+    const newHobbyID = hobbyResult.insertId;
 
-    res.redirect("/home");
+    // Link to user in User_Hobbies
+    const linkUserHobby = `INSERT INTO User_Hobbies (userID, hobbyID) VALUES (?, ?)`;
+    await db.query(linkUserHobby, [userID, newHobbyID]);
+
+    // Link to tag in Hobby_Tags
+    const linkTag = `INSERT INTO Hobby_Tags (hobbyID, tagID) VALUES (?, ?)`;
+    await db.query(linkTag, [newHobbyID, tagID]);
+
+    res.redirect("/home"); // or "/profile" or "/listings"
   } catch (err) {
-    console.error("Error during signup:", err);
-    res.status(500).send("Error signing up");
+    console.error("Error posting hobby:", err);
+    res.status(500).send("Failed to post hobby.");
   }
 });
 
