@@ -1,16 +1,17 @@
 extends layout_no_links.pug
 
 block content
-  div(style='text-align: center;')
-    h1 Sign In
-  form(action='/signin', method='post', class='signin-form')
-    div.form-group
-      label(for='email') Email:
-      input(type='email', id='email', name='email', required=true, class='form-control')
-    div.form-group
-      label(for='password') Password:
-      input(type='password', id='password', name='password', required=true, class='form-control')
-    button(type='submit', class='button') Sign In
-  div(style='text-align: center;')
-    p
-      a(href='/signup') Don't have an account? Sign Up
+  .signin-page
+    div(style='text-align: center;')
+      h1 Sign In
+    form(action='/signin', method='post', class='signin-form')
+      .form-group
+        label(for='email') Email:
+        input(type='email', id='email', name='email', required=true, class='form-control')
+      .form-group
+        label(for='password') Password:
+        input(type='password', id='password', name='password', required=true, class='form-control')
+      button(type='submit', class='button') Sign In
+    div(style='text-align: center;')
+      p
+        a(href='/signup') Don't have an account? Sign Up

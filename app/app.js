@@ -42,38 +42,75 @@ app.get("/signin", function(req, res) {
 });
 
 app.get("/home", async function(req, res) {
-  try {
-    const userId = req.session.userID;
-
-    const userQuery = "SELECT travel_locations FROM Users WHERE userID = ?";
-    const userResult = await db.query(userQuery, [userId]);
-    const user = userResult[0];
-    const travelLocations = user.travel_locations ? user.travel_locations.split(', ') : [];
-
-    let hobbiesQuery = `
-      SELECT Hobbies.hobbyID, Hobbies.hobbyName, Categories.name AS category, Users.name AS owner, Hobbies.description, Users.userID AS userID
-      FROM Hobbies
-      JOIN Categories ON Hobbies.categoryID = Categories.categoryID
-      JOIN User_Hobbies ON Hobbies.hobbyID = User_Hobbies.hobbyID
-      JOIN Users ON User_Hobbies.userID = Users.userID`;
-
-    let queryParams = [];
-
-    if (travelLocations.length > 0) {
-      hobbiesQuery += " WHERE Users.location IN (" + travelLocations.map(() => '?').join(', ') + ")";
-      queryParams.push(...travelLocations);
+    try {
+      // Verify session
+      if (!req.session.userID) {
+        return res.redirect("/signin");
+      }
+  
+      const userId = req.session.userID;
+      
+      // Get user data with null check
+      const userQuery = "SELECT travel_locations FROM Users WHERE userID = ?";
+      const userResult = await db.query(userQuery, [userId]);
+      
+      if (!userResult || userResult.length === 0) {
+        req.session.destroy(); // Clear invalid session
+        return res.redirect("/signin");
+      }
+  
+      const user = userResult[0];
+      const travelLocations = user.travel_locations 
+        ? user.travel_locations.split(',').map(loc => loc.trim()).filter(loc => loc)
+        : [];
+  
+      // Build query safely
+      let hobbiesQuery = `
+        SELECT 
+          H.hobbyID, 
+          H.hobbyName, 
+          C.name AS category, 
+          U.name AS owner, 
+          H.description, 
+          U.userID,
+          GROUP_CONCAT(DISTINCT T.name SEPARATOR ', ') AS tags
+        FROM Hobbies H
+        JOIN Categories C ON H.categoryID = C.categoryID
+        JOIN User_Hobbies UH ON H.hobbyID = UH.hobbyID
+        JOIN Users U ON UH.userID = U.userID
+        LEFT JOIN Hobby_Tags HT ON H.hobbyID = HT.hobbyID
+        LEFT JOIN Tags T ON HT.tagID = T.tagID
+      `;
+  
+      let whereClauses = [];
+      let queryParams = [];
+  
+      if (travelLocations.length > 0) {
+        whereClauses.push(`U.location IN (${travelLocations.map(() => '?').join(',')})`);
+        queryParams.push(...travelLocations);
+      }
+  
+      if (whereClauses.length > 0) {
+        hobbiesQuery += ' WHERE ' + whereClauses.join(' AND ');
+      }
+  
+      hobbiesQuery += ' GROUP BY H.hobbyID ORDER BY H.hobbyID DESC';
+  
+      const hobbies = await db.query(hobbiesQuery, queryParams);
+  
+      res.render("home", { 
+        hobbies: hobbies || [],
+        user: req.session.user || null
+      });
+  
+    } catch (error) {
+      console.error("Home route error:", error);
+      res.status(500).render("error", {
+        message: "Failed to load home page",
+        error: process.env.NODE_ENV === 'development' ? error : null
+      });
     }
-
-    hobbiesQuery += " ORDER BY Hobbies.hobbyID DESC";
-
-    const hobbies = await db.query(hobbiesQuery, queryParams);
-
-    res.render("home", { hobbies });
-  } catch (error) {
-    console.error("Error fetching hobbies:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+  });
 
 app.get("/profile", async function (req, res) {
   try {
@@ -140,20 +177,6 @@ app.get("/edit-profile", async function (req, res) {
     console.error("Error fetching profile for edit:", error);
     res.status(500).send("Internal Server Error");
   }
-});
-
-app.get("/message/:id", async (req, res) => {
-  const receiverID = req.params.id;
-  const senderID = req.session.userID;
-
-  if (!senderID) return res.redirect("/signin");
-
-  // Get receiver's name to show in the form
-  const receiverQuery = "SELECT name FROM Users WHERE userID = ?";
-  const receiverResult = await db.query(receiverQuery, [receiverID]);
-  const receiver = receiverResult[0];
-
-  res.render("message", { receiverID, receiverName: receiver.name });
 });
 
 // Show message form
@@ -320,25 +343,6 @@ app.post("/edit-profile", async function (req, res) {
   } catch (error) {
     console.error("Error updating profile:", error);
     res.status(500).send("Error updating profile");
-  }
-});
-
-app.post("/message/:id", async (req, res) => {
-  const receiverID = req.params.id;
-  const senderID = req.session.userID;
-  const { content } = req.body;
-
-  if (!senderID) return res.redirect("/signin");
-
-  try {
-    const insertMessage = `
-      INSERT INTO Messages (senderID, receiverID, content)
-      VALUES (?, ?, ?)`;
-    await db.query(insertMessage, [senderID, receiverID, content]);
-    res.redirect(`/user/${receiverID}`);
-  } catch (err) {
-    console.error("Error sending message:", err);
-    res.status(500).send("Failed to send message.");
   }
 });
 
@@ -631,9 +635,14 @@ app.post("/messages/:userId", async (req, res) => {
     res.status(500).send("Failed to send message.");
   }
 });
-
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render('error', { 
+      message: 'Something went wrong!',
+      error: process.env.NODE_ENV === 'development' ? err : {}
+    });
+  });
 app.listen(3000, () => {
   console.log(`Server running at http://127.0.0.1:3000/`);
 });
-
-
