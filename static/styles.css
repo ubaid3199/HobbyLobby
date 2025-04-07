@@ -17,7 +17,7 @@ body {
 }
 
 .signup-page {
- background: url('/images/needlebg.png') center/cover no-repeat;
+ background: url('/images/signup_bg.png') center/cover no-repeat;
  min-height: 100vh;
  display: flex;
  align-items: center;
@@ -268,7 +268,7 @@ nav a:hover {
 }
 
 .signup-page {
- background: url('/images/needlebg.png') center/cover no-repeat;
+ background: url('/images/signup_bg.png') center/cover no-repeat;
  min-height: 100vh;
  display: flex;
  align-items: center;

@@ -1,82 +1,63 @@
 extends layout_no_links.pug
 
 block content
-  div(style='text-align: center;')
-    h1 Sign Up
-  form(action='/signup', method='post', class='signup-form')
-    div.form-group
-      label(for='firstName') First Name:
-      input(type='text', id='firstName', name='firstName', required=true, class='form-control')
-    div.form-group
-      label(for='lastName') Last Name:
-      input(type='text', id='lastName', name='lastName', required=true, class='form-control')
-    div.form-group
-      label(for='email') Email:
-      input(type='email', id='email', name='email', required=true, class='form-control')
-    div.form-group
-      label(for='password') Password:
-      input(type='password', id='password', name='password', required=true, class='form-control')
-    div.form-group
-      label(for='dob') Date of Birth:
-      input(type='date', id='dob', name='dob', required=true, class='form-control')
-    div.form-group
-      label(for='gender') Gender:
-      select(id='gender', name='gender', required=true, class='form-control')
-        option(value='') Select Gender
-        option(value='male') Male
-        option(value='female') Female
-        option(value='other') Other
-    div.form-group
-      label(for='locationBased') Location Based:
-      select(id='locationBased', name='locationBased', required=true, class='form-control')
-        option(value='') Select Location
-        option(value='North London') North London
-        option(value='East London') East London
-        option(value='Central London') Central London
-        option(value='West London') West London
-        option(value='South London') South London
-    div.form-group
-      label(for='travelLocation') Willing to Travel To:
-      br
-      label(for='North London') North London
-      input(type='checkbox', id='North London', name='travelLocation', value='North London', required=true)
-      br
-      label(for='East London') East London
-      input(type='checkbox', id='East London', name='travelLocation', value='East London')
-      br
-      label(for='Central London') Central London
-      input(type='checkbox', id='Central London', name='travelLocation', value='Central London')
-      br
-      label(for='West London') West London
-      input(type='checkbox', id='West London', name='travelLocation', value='West London')
-      br
-      label(for='South London') South London
-      input(type='checkbox', id='South London', name='travelLocation', value='South London')
+  .signup-page
+    .logo-wrapper
+      img(src='/images/2.png', alt='Sign Up Logo', class='signup-logo')
 
-    div.form-group
-      label(for='hobbyName') Hobby Name:
-      input(type='text', id='hobbyName', name='hobbyName', required=true, class='form-control')
+    .signup-form
+      h1(style='text-align: center;') Sign Up
+      form(action='/signup', method='post')
+        .form-group
+          label(for='firstName') First Name:
+          input(type='text', id='firstName', name='firstName', required=true, class='form-control')
+        .form-group
+          label(for='lastName') Last Name:
+          input(type='text', id='lastName', name='lastName', required=true, class='form-control')
+        .form-group
+          label(for='email') Email:
+          input(type='email', id='email', name='email', required=true, class='form-control')
+        .form-group
+          label(for='password') Password:
+          input(type='password', id='password', name='password', required=true, class='form-control')
+        .form-group
+          label(for='dob') Date of Birth:
+          input(type='date', id='dob', name='dob', required=true, class='form-control')
+        .form-group
+          label(for='gender') Gender:
+          select(id='gender', name='gender', required=true, class='form-control')
+            option(value='') Select Gender
+            option(value='male') Male
+            option(value='female') Female
+            option(value='other') Other
+        .form-group
+          label(for='locationBased') Location Based:
+          select(id='locationBased', name='locationBased', required=true, class='form-control')
+            option(value='') Select Location
+            option(value='North London') North London
+            option(value='East London') East London
+            option(value='Central London') Central London
+            option(value='West London') West London
+            option(value='South London') South London
+        .form-group
+          label(for='travelLocation') Willing to Travel To:
+          br
+          label(for='North London') North London
+          input(type='checkbox', id='North London', name='travelLocation', value='North London', required=true)
+          br
+          label(for='East London') East London
+          input(type='checkbox', id='East London', name='travelLocation', value='East London')
+          br
+          label(for='Central London') Central London
+          input(type='checkbox', id='Central London', name='travelLocation', value='Central London')
+          br
+          label(for='West London') West London
+          input(type='checkbox', id='West London', name='travelLocation', value='West London')
+          br
+          label(for='South London') South London
+          input(type='checkbox', id='South London', name='travelLocation', value='South London')
+        
+        button(type='submit', class='button') Sign Up
 
-    div.form-group
-      label(for='description') Hobby Description:
-      textarea(id='description', name='description', required=true, class='form-control')
-
-    div.form-group
-      label(for='categoryID') Hobby Category:
-      select(id='categoryID', name='categoryID', required=true, class='form-control')
-        option(value='') Select Category
-        each category in categories
-          option(value=category.categoryID)= category.name
-
-    div.form-group
-      label(for='tagID') Skill Level:
-      select(id='tagID', name='tagID', required=true, class='form-control')
-        option(value='') Select Skill Level
-        each tag in tags
-          option(value=tag.tagID)= tag.name
-
-
-    button(type='submit', class='button') Sign Up
-  div(style='text-align: center;')
-    p
-      a(href='/signin') Already have an account? Sign In
+      p(style='text-align: center;')
+        a(href='/signin') Already have an account? Sign In
