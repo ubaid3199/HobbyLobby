@@ -2,16 +2,19 @@ extends layout_no_links.pug
 
 block content
   .signin-page
-    div(style='text-align: center;')
+    // Logo on the background but outside the sign-in container
+    img(src='/images/2.png', alt='Logo', class='background-logo')
+
+    .signin-form
       h1 Sign In
-    form(action='/signin', method='post', class='signin-form')
-      .form-group
-        label(for='email') Email:
-        input(type='email', id='email', name='email', required=true, class='form-control')
-      .form-group
-        label(for='password') Password:
-        input(type='password', id='password', name='password', required=true, class='form-control')
-      button(type='submit', class='button') Sign In
-    div(style='text-align: center;')
+      form(action='/signin', method='post')
+        .form-group
+          label(for='email') Email:
+          input(type='email', id='email', name='email', required=true, class='form-control')
+        .form-group
+          label(for='password') Password:
+          input(type='password', id='password', name='password', required=true, class='form-control')
+        button(type='submit', class='button') Sign In
+
       p
         a(href='/signup') Don't have an account? Sign Up
