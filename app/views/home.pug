@@ -1,19 +1,20 @@
 extends layout
 
 block content
-  h1 Recomended hobbies
-
+  h1(style="text-align: center; margin-bottom: 30px;") Recommended Hobbies
 
 
   if hobbies && hobbies.length > 0
-    ul
-      each hobby in hobbies
-        li
-          strong #{hobby.hobbyName}
-          p #{hobby.description}
-          | - #{hobby.category} - Posted by 
-          a(href=`/user/${hobby.userID}`) #{hobby.owner}
-          if hobby.tags
-            p Tags: #{hobby.tags}
+    each hobby in hobbies
+      .hobby-box(style="border: 1px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f7f7f7;")
+        h2(style="margin-top: 0;") #{hobby.hobbyName}
+        p #{hobby.description}
+        p 
+          | Category: #{hobby.category}
+        p 
+          | Posted by: 
+          a(href=`/user/${hobby.userID}` style="color: #007bff; text-decoration: none;") #{hobby.owner}
+        if hobby.tags
+          p Tags: #{hobby.tags}
   else
-    p No hobbies found.
+    p(style="color: #888; font-style: italic;") No hobbies found.
