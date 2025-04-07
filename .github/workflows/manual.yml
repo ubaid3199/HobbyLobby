@@ -1,0 +1,14 @@
+# This is a basic workflow manually triggered
+
+name: Manual Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Say hello
+        run: echo "Hello from HobbyLobby's CI workflow!"
