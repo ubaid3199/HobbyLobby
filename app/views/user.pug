@@ -35,5 +35,16 @@ block content
       else
         p No messages yet.
 
+  if user.userID !== userSessionID
+    a.button(href=`/review/${user.userID}`) Review User
+
+  h2 Reviews
+  if reviews.length
+    ul
+      each review in reviews
+        li Rating: #{review.rating}, Comments: #{review.comments}
+  else
+    p No reviews yet.
+
   a.button(href="/users") Back to Users Page
   a.button(href="/") Back to Home Page

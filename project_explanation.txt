@@ -1,0 +1,34 @@
+This project is a web application built with Node.js, Express.js, and MySQL. It allows users to connect with others who share similar hobbies. The application uses the Pug templating engine for rendering dynamic content and bcryptjs for password hashing.
+
+Database Structure:
+The application uses a MySQL database named sd2-db. The database contains the following tables:
+
+* Users: Stores user information, including userID (INT, PRIMARY KEY, AUTO_INCREMENT), name (VARCHAR), email (VARCHAR), password (VARCHAR, hashed using bcryptjs), dob (DATE), gender (VARCHAR), location (VARCHAR), and travel_locations (VARCHAR, comma-separated list). The travel_locations field is used to filter hobbies based on the user's preferred travel locations.
+* Hobbies: Stores information about hobbies, including hobbyID (INT, PRIMARY KEY, AUTO_INCREMENT), hobbyName (VARCHAR), description (TEXT), and categoryID (INT, FOREIGN KEY referencing Categories).
+* Categories: Stores hobby categories, including categoryID (INT, PRIMARY KEY) and name (VARCHAR).
+* Tags: Stores tags for hobbies, including tagID (INT, PRIMARY KEY) and name (VARCHAR).
+* User_Hobbies: A linking table between Users and Hobbies, indicating which users are interested in which hobbies. It contains userID (INT, FOREIGN KEY referencing Users) and hobbyID (INT, FOREIGN KEY referencing Hobbies). This table implements a many-to-many relationship between users and hobbies.
+* Hobby_Tags: A linking table between Hobbies and Tags, associating tags with hobbies. It contains hobbyID (INT, FOREIGN KEY referencing Hobbies) and tagID (INT, FOREIGN KEY referencing Tags). This table implements a many-to-many relationship between hobbies and tags.
+* Messages: Stores messages between users, including messageID (INT, PRIMARY KEY, AUTO_INCREMENT), senderID (INT, FOREIGN KEY referencing Users), receiverID (INT, FOREIGN KEY referencing Users), and content (TEXT).
+* Reviews: Stores reviews of users, including reviewID (INT, PRIMARY KEY, AUTO_INCREMENT), userID (INT, FOREIGN KEY referencing Users), rating (INT), comments (TEXT), and reviewerID (INT, FOREIGN KEY referencing Users).
+
+Relationships:
+* Users can have multiple hobbies (one-to-many relationship through User_Hobbies).
+* Hobbies belong to a category (one-to-many relationship with Categories).
+* Hobbies can have multiple tags (one-to-many relationship through Hobby_Tags).
+* Users can send and receive messages (one-to-many relationship with Messages).
+* Users can have multiple reviews (one-to-many relationship with Reviews).
+
+Functionality:
+The application provides the following functionality:
+
+* User registration and authentication: Users can create accounts and log in. The password is encrypted using bcryptjs before being stored in the database. Sessions are used to maintain user authentication.
+* Hobby browsing: Users can browse a list of hobbies.
+* User profiles: Users can view their profiles and see their associated hobbies, messages, and reviews.
+* Messaging: Users can send messages to each other.
+* Reviews: Users can leave reviews for each other.
+* Posting Hobbies: Users can post new hobbies.
+
+Sorting and Filtering:
+* The /home route fetches hobbies and displays them. The hobbies are filtered based on the user's travel locations. The travel locations are stored as a comma-separated string in the travel_locations field of the Users table. The application splits this string into an array and uses it to filter the hobbies based on the user's location. The hobbies are ordered by hobbyID in descending order (ORDER BY H.hobbyID DESC in the SQL query), effectively showing the most recently added hobbies first.
+* The /users route fetches users and allows filtering by tag. The users are ordered by userID (ORDER BY U.userID in the SQL query). The tag filtering is implemented by adding a WHERE clause to the SQL query that filters the users based on the selected tag.

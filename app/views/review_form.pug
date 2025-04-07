@@ -1,0 +1,25 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Review User
+
+  body
+    h1 Reviewing #{receiverName}
+
+    form(action=`/review/${receiverID}`, method="POST")
+      label(for="rating") Rating (1-5):
+      select(name="rating", id="rating")
+        option(value="1") 1
+        option(value="2") 2
+        option(value="3") 3
+        option(value="4") 4
+        option(value="5") 5
+      br
+
+      label(for="comments") Comments:
+      textarea(name="comments", id="comments", rows="4", cols="50")
+      br
+
+      button(type="submit") Submit Review

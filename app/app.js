@@ -31,6 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Get the functions in the db.js file to use
 const db = require('./services/db');
+const reviewService = require('./services/review');
 
 // Create a route for root
 app.get("/", function(req, res) {
@@ -401,6 +402,60 @@ app.post("/message/:receiverID", async (req, res) => {
   }
 });
 
+// Show review form
+app.get("/review/:receiverID", async (req, res) => {
+  const receiverID = req.params.receiverID;
+
+  if (!req.session.userID) {
+    return res.redirect("/signin");
+  }
+
+  // Fetch receiver info to display on the form
+  const receiverQuery = "SELECT name FROM Users WHERE userID = ?";
+  const receiverResult = await db.query(receiverQuery, [receiverID]);
+
+  if (receiverResult.length === 0) {
+    return res.status(404).send("User not found");
+  }
+
+  res.render("review_form", {
+    receiverID,
+    receiverName: receiverResult[0].name
+  });
+});
+
+// Handle review submission
+app.post("/review/:receiverID", async (req, res) => {
+  const senderID = req.session.userID;
+  const receiverID = req.params.receiverID;
+  const { rating, comments } = req.body;
+
+  if (!senderID) {
+    return res.redirect("/signin");
+  }
+
+  try {
+    console.log("Review submission received:", {
+      senderID,
+      receiverID,
+      rating,
+      comments
+    });
+
+    await reviewService.createReview(receiverID, senderID, rating, comments);
+
+    res.redirect(`/user/${receiverID}`);
+  } catch (error) {
+    console.error("Error submitting review:", error, {
+      senderID,
+      receiverID,
+      rating,
+      comments
+    });
+    res.status(500).render('error', { message: 'Failed to submit review.' });
+  }
+});
+
 
 app.get("/detail", function(req, res) {
     res.render("detail", { hobby: {}, tags: [] });
@@ -443,6 +498,7 @@ app.get("/users", async function (req, res) {
   }
 });
 
+
 // User Profile Page Route
 app.get("/user/:id", async (req, res) => {
   try {
@@ -450,13 +506,17 @@ app.get("/user/:id", async (req, res) => {
 
     // Fetch user details
     const userQuery = "SELECT * FROM Users WHERE userID = ?";
-    const user = await db.query(userQuery, [userId]);
+    const userResult = await db.query(userQuery, [userId]);
 
-    if (user.length === 0) return res.status(404).send("User not found");
+    if (!userResult || userResult.length === 0) {
+      return res.status(404).send("User not found");
+    }
+
+    const user = userResult[0];
 
     // Fetch user's hobbies
     const hobbiesQuery = `
-      SELECT H.hobbyName, C.name AS category 
+      SELECT H.hobbyName, C.name AS category
       FROM User_Hobbies UH
       JOIN Hobbies H ON UH.hobbyID = H.hobbyID
       JOIN Categories C ON H.categoryID = C.categoryID
@@ -477,28 +537,36 @@ app.get("/user/:id", async (req, res) => {
 
     const userTag = tagResult.length > 0 ? tagResult[0].tagName : "No tag assigned";
 
+    // Fetch messages
     const messagesQuery = `
-      SELECT sender.name AS senderName, receiver.name AS receiverName, Messages.content 
-      FROM Messages 
-      JOIN Users AS sender ON Messages.senderID = sender.userID 
-      JOIN Users AS receiver ON Messages.receiverID = receiver.userID 
+      SELECT sender.name AS senderName, receiver.name AS receiverName, Messages.content
+      FROM Messages
+      JOIN Users AS sender ON Messages.senderID = sender.userID
+      JOIN Users AS receiver ON Messages.receiverID = receiver.userID
       WHERE sender.userID = ? OR receiver.userID = ?`;
     const messages = await db.query(messagesQuery, [userId, userId]);
+    // Fetch reviews
+    let reviews = [];
+    try {
+      reviews = await reviewService.getReviews(userId);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
 
     res.render("user", {
-      user: user[0],
+      user,
       hobbies,
       userTag,
       messages: messages || [],
+      reviews: reviews || [],
       userSessionID: req.session.userID
     });
 
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).render('error', { message: 'Something went wrong!' });
   }
 });
-
 app.get("/listings", async function (req, res) {
   const selectedCategory = req.query.category || "";
 

@@ -172,11 +172,12 @@ INSERT INTO `Messages` (`messageID`, `senderID`, `receiverID`, `content`) VALUES
 --
 
 CREATE TABLE `Reviews` (
-  `reviewID` int NOT NULL,
+  `reviewID` int NOT NULL AUTO_INCREMENT,
   `userID` int NOT NULL,
   `rating` int DEFAULT NULL,
   `comments` text,
-  `reviewerID` int NOT NULL
+  `reviewerID` int NOT NULL,
+  PRIMARY KEY (`reviewID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
