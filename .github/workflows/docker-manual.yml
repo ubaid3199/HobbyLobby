@@ -1,3 +1,5 @@
+# This is a workflow that is manually triggered to test the docker build
+
 name: Manual workflow for docker
 
 on:
@@ -8,28 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: check
-        run: echo "first job done!"
+      - name: Check runner
+        run: echo "Starting CI build..."
 
-      - uses: actions/checkout@v4
+      - name: Checkout the repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: check node
-        run: node --version
+      - name: Show files
+        run: ls -la
 
-      - name: check dir
-        run: ls
-
-      - name: Create the .env file
+      - name: Create the .env file from secret
         run: echo "${{ secrets.ENV_FILE }}" > .env
 
-      - name: Check .env file
+      - name: Check .env contents
         run: cat .env
 
       - name: Install dependencies
         run: npm install
 
-      - uses: hoverkraft-tech/compose-action@v2.0.1
+      - name: Docker Compose Build & Up
+        uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "./docker-compose-deploy.yml"
