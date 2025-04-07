@@ -269,8 +269,7 @@ app.get("/1", function(req, res) {
 app.post("/signup", async function(req, res) {
   console.log("Sign up form data:", req.body);
   const {
-    firstName, lastName, email, password, dob, gender, locationBased, travelLocation,
-    hobbyName, description, categoryID, tagID
+    firstName, lastName, email, password, dob, gender, locationBased, travelLocation
   } = req.body;
 
   let travelLocations = [];
@@ -290,20 +289,7 @@ app.post("/signup", async function(req, res) {
       INSERT INTO Users (name, email, password, dob, gender, location, travel_locations)
       VALUES (?, ?, ?, ?, ?, ?, ?)`;
     const userValues = [fullName, email, hashedPassword, dob, gender, locationBased, travelLocationsString];
-    const result = await db.query(insertUserQuery, userValues);
-    const newUserID = result.insertId;
-
-    const insertHobbyQuery = `
-      INSERT INTO Hobbies (hobbyName, description, categoryID)
-      VALUES (?, ?, ?)`;
-    const hobbyResult = await db.query(insertHobbyQuery, [hobbyName, description, categoryID]);
-    const newHobbyID = hobbyResult.insertId;
-
-    const linkUserHobby = `INSERT INTO User_Hobbies (userID, hobbyID) VALUES (?, ?)`;
-    await db.query(linkUserHobby, [newUserID, newHobbyID]);
-
-    const linkTag = `INSERT INTO Hobby_Tags (hobbyID, tagID) VALUES (?, ?)`;
-    await db.query(linkTag, [newHobbyID, tagID]);
+    await db.query(insertUserQuery, userValues);
 
     res.redirect("/signin");
   } catch (err) {
@@ -311,7 +297,6 @@ app.post("/signup", async function(req, res) {
     res.status(500).send("Error signing up");
   }
 });
-
 
 app.post("/signin", async function(req, res) {
   const { email, password } = req.body;
