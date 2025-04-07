@@ -4,16 +4,4 @@ block content
   h1 Recomended hobbies
 
 
-
-  if hobbies && hobbies.length > 0
-    ul
-      each hobby in hobbies
-        li
-          strong #{hobby.hobbyName}
-          p #{hobby.description}
-          | - #{hobby.category} - Posted by 
-          a(href=`/user/${hobby.userID}`) #{hobby.owner}
-          if hobby.tags
-            p Tags: #{hobby.tags}
-  else
     p No hobbies found.
