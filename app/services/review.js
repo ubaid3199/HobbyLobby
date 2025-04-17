@@ -15,7 +15,16 @@ async function createReview(userID, reviewerID, rating, comments) {
 }
 
 async function getReviews(userID) {
-  const sql = "SELECT rating, comments, reviewerID FROM Reviews WHERE userID = ?";
+  const sql = `
+    SELECT
+      Reviews.rating,
+      Reviews.comments,
+      Reviews.reviewerID,
+      Users.name AS author
+    FROM Reviews
+    JOIN Users ON Reviews.reviewerID = Users.userID
+    WHERE Reviews.userID = ?
+  `;
   const params = [userID];
   try {
     const rows = await db.query(sql, params);

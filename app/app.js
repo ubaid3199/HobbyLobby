@@ -538,12 +538,17 @@ app.get("/user/:id", async (req, res) => {
       console.error("Error fetching reviews:", error);
     }
 
+    // Calculate average rating
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+
     res.render("user", {
       user,
       hobbies,
       userTag,
       messages: messages || [],
       reviews: reviews || [],
+      averageRating,
       userSessionID: req.session.userID
     });
 

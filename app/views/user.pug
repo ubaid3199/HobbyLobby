@@ -39,15 +39,21 @@ block content
       a.button(href="/") Back to Home Page
 
       h2 Reviews
+      p Overall Rating:
+        each i in Array(Math.round(averageRating))
+          | &star;
+      a.button(href=`/review/${user.userID}`) Give Review
       #reviews
         if reviews.length
-          ul
+          .reviews-container
             each review in reviews
-              li #{review.author}: #{review.comment}
+              .review
+                .review-header
+                  span.author #{review.author}
+                  span.rating
+                    each i in Array(review.rating)
+                      | &star;
+                p.review-comment #{review.comments}
         else
           p No reviews yet.
 
-        form(action=`/review/${user.userID}`, method="post")
-          label(for="comment") Add a review:
-          textarea#comment(name="comment", rows="4", cols="50")
-          button(type="submit") Submit Review
