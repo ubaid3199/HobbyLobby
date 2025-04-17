@@ -552,6 +552,11 @@ app.get("/user/:id", async (req, res) => {
     res.status(500).render('error', { message: 'Something went wrong!' });
   }
 });
+
+app.get("/terms", (req, res) => {
+  res.render("terms");
+});
+
 app.get("/listings", async function (req, res) {
   const selectedCategory = req.query.category || "";
 

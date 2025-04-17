@@ -57,6 +57,10 @@ block content
           label(for='South London') South London
           input(type='checkbox', id='South London', name='travelLocation', value='South London')
         
+        .form-group
+          input(type='checkbox', id='agreeTerms', required=true)
+          label(for='agreeTerms') I agree to the 
+            a(href='/terms', target='_blank') Terms and Conditions
         button(type='submit', class='button') Sign Up
 
       p(style='text-align: center;')
